@@ -316,7 +316,7 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                     if (!member.filled) return null;
                                                     const result = teamEnergy.memberResults[index];
                                                     const weeklyBerry = result.berryTotalStrength * 7;
-                                                    const weeklySkill = result.skillStrength * 7;
+                                                    const weeklySkill = (result.skillStrength + result.skillStrength2) * 7;
                                                     const individualTotal = weeklyBerry + weeklySkill;
                                                     return (
                                                         <TableRow key={index}>
@@ -364,44 +364,6 @@ const TeamView = React.memo(({ state, dispatch }: {
 
                                 {/* Weekly ingredient production and shortage */}
                                 <Box mt={3} display="flex" gap={2} flexWrap="wrap">
-                                {/* Weekly ingredient production */}
-                                {teamEnergy.ingredients.size > 0 && (
-                                    <Box flex="1" minWidth="250px">
-                                        <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold' }}>
-                                            {t('weekly ingredient production')}
-                                        </Typography>
-                                        <Table size="small">
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell style={{ fontSize: '0.8rem' }}>{t('ingredient')}</TableCell>
-                                                    <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('amount')}</TableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {Array.from(teamEnergy.ingredients.entries())
-                                                    .sort((a, b) => b[1] - a[1])
-                                                    .map(([name, count]) => (
-                                                    <TableRow key={name}>
-                                                        <TableCell style={{ padding: '4px 8px' }}>
-                                                            <Box display="flex" alignItems="center" gap={0.5}>
-                                                                <Box style={{ transform: 'scale(0.6)', transformOrigin: 'center' }}>
-                                                                    <IngredientIcon name={name} />
-                                                                </Box>
-                                                                <Typography variant="caption">
-                                                                    {name}
-                                                                </Typography>
-                                                            </Box>
-                                                        </TableCell>
-                                                        <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
-                                                            {Math.round(count).toLocaleString()}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </TableBody>
-                                        </Table>
-                                    </Box>
-                                )}
-
                                 {/* Ingredient shortage for 21 meals */}
                                 {ingredientRequirements.length > 0 && (
                                     <Box flex="1" minWidth="300px">
@@ -443,6 +405,44 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                             color: req.shortage > 0 ? '#f44336' : '#4caf50'
                                                         }}>
                                                             {req.shortage > 0 ? `-${req.shortage.toLocaleString()}` : `+${Math.abs(req.shortage).toLocaleString()}`}
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                                        </Table>
+                                    </Box>
+                                )}
+
+                                {/* Weekly ingredient production */}
+                                {teamEnergy.ingredients.size > 0 && (
+                                    <Box flex="1" minWidth="250px">
+                                        <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold' }}>
+                                            {t('weekly ingredient production')}
+                                        </Typography>
+                                        <Table size="small">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell style={{ fontSize: '0.8rem' }}>{t('ingredient')}</TableCell>
+                                                    <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('amount')}</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {Array.from(teamEnergy.ingredients.entries())
+                                                    .sort((a, b) => b[1] - a[1])
+                                                    .map(([name, count]) => (
+                                                    <TableRow key={name}>
+                                                        <TableCell style={{ padding: '4px 8px' }}>
+                                                            <Box display="flex" alignItems="center" gap={0.5}>
+                                                                <Box style={{ transform: 'scale(0.6)', transformOrigin: 'center' }}>
+                                                                    <IngredientIcon name={name} />
+                                                                </Box>
+                                                                <Typography variant="caption">
+                                                                    {name}
+                                                                </Typography>
+                                                            </Box>
+                                                        </TableCell>
+                                                        <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
+                                                            {Math.round(count).toLocaleString()}
                                                         </TableCell>
                                                     </TableRow>
                                                 ))}

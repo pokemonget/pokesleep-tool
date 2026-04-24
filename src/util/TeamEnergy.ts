@@ -48,7 +48,7 @@ export function calculateTeamEnergy(
         memberResults.push(result);
 
         totalBerryEnergy += result.berryTotalStrength;
-        totalSkillEnergy += result.skillStrength;
+        totalSkillEnergy += result.skillStrength + result.skillStrength2;
 
         // Accumulate ingredients
         for (const ing of result.ingredients) {
