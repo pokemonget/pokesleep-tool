@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/system';
-import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, FormControlLabel } from '@mui/material';
+import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
