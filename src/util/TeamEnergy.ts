@@ -1,6 +1,8 @@
 import PokemonIv from './PokemonIv';
 import PokemonStrength, { StrengthParameter, StrengthResult } from './PokemonStrength';
+import { MainSkillName } from './MainSkill';
 import { IngredientName } from '../data/pokemons';
+import { ingredientStrength } from './PokemonRp';
 import { Recipe } from '../ui/IvCalc/Team/TeamState';
 
 export interface TeamEnergyResult {
@@ -50,10 +52,17 @@ export function calculateTeamEnergy(
         totalBerryEnergy += result.berryTotalStrength;
         totalSkillEnergy += result.skillStrength + result.skillStrength2;
 
-        // Accumulate ingredients
+        // Accumulate ingredients from help
         for (const ing of result.ingredients) {
             const current = ingredients.get(ing.name) || 0;
             ingredients.set(ing.name, current + ing.count);
+        }
+
+        // Accumulate ingredients from skills
+        const skillIngredients = calculateSkillIngredients(result, member);
+        for (const [name, count] of skillIngredients) {
+            const current = ingredients.get(name) || 0;
+            ingredients.set(name, current + count);
         }
     }
 
@@ -159,4 +168,88 @@ function mapIngredientName(japaneseName: string): IngredientName {
         'ワカクサコーン': 'corn',
     };
     return mapping[japaneseName] || 'unknown';
+}
+
+/**
+ * Calculate ingredients obtained from skills
+ * @param result Strength result from PokemonStrength
+ * @param member Pokemon member
+ * @returns Map of ingredient name to count
+ */
+function calculateSkillIngredients(
+    result: StrengthResult,
+    member: PokemonIv
+): Map<IngredientName, number> {
+    const skillIngredients = new Map<IngredientName, number>();
+    
+    // Get the main skill name
+    const mainSkill = member.pokemon.skill === "Versatile" 
+        ? member.versatileSkill 
+        : member.pokemon.skill;
+    
+    // Ingredient Magnet S (Plus) - specific ingredient
+    if (mainSkill === "Ingredient Magnet S (Plus)") {
+        const ingCount = result.skillValue2; // skillValue2 contains the additional ingredient count
+        const ingName = member.pokemon.ing1.name;
+        const current = skillIngredients.get(ingName) || 0;
+        skillIngredients.set(ingName, current + ingCount);
+    }
+    
+    // Ingredient Magnet S (Present) - random ingredients (candy)
+    // Candy is not a regular ingredient, so we skip it for now
+    
+    // Ingredient Magnet S - random ingredients (average)
+    if (mainSkill === "Ingredient Magnet S") {
+        const ingCount = result.skillValue; // skillValue contains the number of ingredients
+        // Distribute evenly across all ingredients for average calculation
+        const allIngredients = Object.keys(ingredientStrength) as IngredientName[];
+        const avgPerIngredient = ingCount / allIngredients.length;
+        for (const ingName of allIngredients) {
+            if (ingName !== 'unknown' && !ingName.startsWith('unknown')) {
+                const current = skillIngredients.get(ingName) || 0;
+                skillIngredients.set(ingName, current + avgPerIngredient);
+            }
+        }
+    }
+    
+    // Ingredient Draw S - random ingredients (average)
+    if (mainSkill === "Ingredient Draw S") {
+        const ingCount = result.skillValue; // skillValue contains the number of ingredients
+        const allIngredients = Object.keys(ingredientStrength) as IngredientName[];
+        const avgPerIngredient = ingCount / allIngredients.length;
+        for (const ingName of allIngredients) {
+            if (ingName !== 'unknown' && !ingName.startsWith('unknown')) {
+                const current = skillIngredients.get(ingName) || 0;
+                skillIngredients.set(ingName, current + avgPerIngredient);
+            }
+        }
+    }
+    
+    // Ingredient Draw S (Super Luck) - random ingredients (average)
+    if (mainSkill === "Ingredient Draw S (Super Luck)") {
+        const ingCount = result.skillValue; // skillValue contains the number of ingredients
+        const allIngredients = Object.keys(ingredientStrength) as IngredientName[];
+        const avgPerIngredient = ingCount / allIngredients.length;
+        for (const ingName of allIngredients) {
+            if (ingName !== 'unknown' && !ingName.startsWith('unknown')) {
+                const current = skillIngredients.get(ingName) || 0;
+                skillIngredients.set(ingName, current + avgPerIngredient);
+            }
+        }
+    }
+    
+    // Ingredient Draw S (Hyper Cutter) - random ingredients (average)
+    if (mainSkill === "Ingredient Draw S (Hyper Cutter)") {
+        const ingCount = result.skillValue; // skillValue contains the number of ingredients
+        const allIngredients = Object.keys(ingredientStrength) as IngredientName[];
+        const avgPerIngredient = ingCount / allIngredients.length;
+        for (const ingName of allIngredients) {
+            if (ingName !== 'unknown' && !ingName.startsWith('unknown')) {
+                const current = skillIngredients.get(ingName) || 0;
+                skillIngredients.set(ingName, current + avgPerIngredient);
+            }
+        }
+    }
+    
+    return skillIngredients;
 }
