@@ -1,0 +1,42 @@
+name: Sync Upstream
+
+on:
+  schedule:
+    # Run daily at 9:00 AM JST (0:00 UTC)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Configure Git
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+    
+    - name: Add upstream remote
+      run: |
+        git remote add upstream https://github.com/nitoyon/pokesleep-tool.git
+        git fetch upstream
+    
+    - name: Merge upstream changes
+      run: |
+        git merge upstream/main -m "Merge upstream changes [skip ci]" || echo "No new changes or merge conflicts"
+    
+    - name: Update package.json homepage
+      run: |
+        # Preserve our custom homepage setting
+        sed -i 's|"homepage": "https://nitoyon.github.io/pokesleep-tool/"|"homepage": "https://nete.jp/"|g' package.json
+    
+    - name: Push changes
+      run: |
+        git push origin main
