@@ -12,7 +12,7 @@ const StyledDialog = styled(Dialog)({
     },
 });
 
-const TeamSlotDialog = React.memo(({ 
+const TeamSlotDialog = ({ 
     open, 
     onClose, 
     onSelect, 
@@ -25,9 +25,10 @@ const TeamSlotDialog = React.memo(({
 }) => {
     const { t } = useTranslation();
 
-    const handleSelect = React.useCallback((boxItemId: number) => {
+    const handleSelect = (boxItemId: number) => {
         onSelect(boxItemId);
-    }, [onSelect]);
+        onClose();
+    };
 
     return (
         <StyledDialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -61,6 +62,6 @@ const TeamSlotDialog = React.memo(({
             </DialogContent>
         </StyledDialog>
     );
-});
+};
 
 export default TeamSlotDialog;
