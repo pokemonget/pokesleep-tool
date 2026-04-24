@@ -19,60 +19,49 @@ export interface Team {
 }
 
 export interface Recipe {
-    /** Recipe ID */
-    id: number;
-    /** Recipe name */
+    id: string;
     name: string;
-    /** Energy per meal */
+    category: 'curry' | 'salad' | 'dessert';
     energyPerMeal: number;
-    /** Required ingredients (simplified) */
-    ingredients: string[];
 }
 
 export const RECIPES: Recipe[] = [
-    // Curry & Stew
-    { id: 0, name: 'とくせんリンゴカレー', energyPerMeal: 420, ingredients: [] },
-    { id: 1, name: 'あぶりテールカレー', energyPerMeal: 840, ingredients: [] },
-    { id: 2, name: 'からくちネギもりカレー', energyPerMeal: 840, ingredients: [] },
-    { id: 3, name: 'ニンジャカレー', energyPerMeal: 1260, ingredients: [] },
-    { id: 4, name: 'おやこあいカレー', energyPerMeal: 420, ingredients: [] },
-    { id: 5, name: 'ぜったいねむりバターカレー', energyPerMeal: 1260, ingredients: [] },
-    { id: 6, name: 'れんごくコーンキーマカレー', energyPerMeal: 1260, ingredients: [] },
-    { id: 7, name: 'ピヨピヨパンチ辛口カレー', energyPerMeal: 1260, ingredients: [] },
-    { id: 8, name: 'じゅうなんコーンシチュー', energyPerMeal: 840, ingredients: [] },
-    { id: 9, name: 'なりきりバケッチャシチュー', energyPerMeal: 1260, ingredients: [] },
-    { id: 10, name: 'めざめるパワーシチュー', energyPerMeal: 1260, ingredients: [] },
-    { id: 11, name: 'いあいぎりすき焼きカレー', energyPerMeal: 1260, ingredients: [] },
-    { id: 12, name: 'しんりょくアボカドグラタン', energyPerMeal: 1680, ingredients: [] },
+    // Curry & Stew (based on wiki data - approximate values for Lv60 with recipe bonus)
+    { id: 'curry1', name: 'とくせんリンゴカレー', category: 'curry', energyPerMeal: 15000 },
+    { id: 'curry2', name: 'あぶりテールカレー', category: 'curry', energyPerMeal: 18000 },
+    { id: 'curry3', name: 'ニンジャカレー', category: 'curry', energyPerMeal: 20000 },
+    { id: 'curry4', name: 'ぜったいねむりバターカレー', category: 'curry', energyPerMeal: 17000 },
+    { id: 'curry5', name: 'おやこあいカレー', category: 'curry', energyPerMeal: 14000 },
+    { id: 'curry6', name: 'キノコのほうしカレー', category: 'curry', energyPerMeal: 13000 },
+    { id: 'curry7', name: 'からくちネギもりカレー', category: 'curry', energyPerMeal: 14500 },
+    { id: 'curry8', name: 'ピヨピヨパンチ辛口カレー', category: 'curry', energyPerMeal: 12000 },
+    { id: 'curry9', name: 'れんごくコーンキーマカレー', category: 'curry', energyPerMeal: 16000 },
+    { id: 'curry10', name: 'いあいぎりすき焼きカレー', category: 'curry', energyPerMeal: 22000 },
+    { id: 'stew1', name: 'めざめるパワーシチュー', category: 'curry', energyPerMeal: 17500 },
+    { id: 'stew2', name: 'じゅうなんコーンシチュー', category: 'curry', energyPerMeal: 15000 },
+    { id: 'stew3', name: 'なりきりバケッチャシチュー', category: 'curry', energyPerMeal: 15500 },
+
     // Salad
-    { id: 20, name: 'クリアアップサラダ', energyPerMeal: 420, ingredients: [] },
-    { id: 21, name: 'マメミートサラダ', energyPerMeal: 420, ingredients: [] },
-    { id: 22, name: 'とくせんリンゴサラダ', energyPerMeal: 420, ingredients: [] },
-    { id: 23, name: 'つやつやアボカドサラダ', energyPerMeal: 1260, ingredients: [] },
-    { id: 24, name: 'ワカクサ大豆サラダ', energyPerMeal: 840, ingredients: [] },
-    { id: 25, name: 'めざましコーヒーサラダ', energyPerMeal: 1260, ingredients: [] },
-    { id: 26, name: 'げんきオールサラダ', energyPerMeal: 1680, ingredients: [] },
-    { id: 27, name: 'おてつだいサポートサラダ', energyPerMeal: 1680, ingredients: [] },
-    { id: 28, name: 'エナジーチャージSサラダ', energyPerMeal: 1680, ingredients: [] },
-    { id: 29, name: 'エナジーチャージMサラダ', energyPerMeal: 2100, ingredients: [] },
+    { id: 'salad1', name: 'あぶりテールサラダ', category: 'salad', energyPerMeal: 17000 },
+    { id: 'salad2', name: 'げきからハーブサラダ', category: 'salad', energyPerMeal: 14000 },
+    { id: 'salad3', name: 'あじわいキノコサラダ', category: 'salad', energyPerMeal: 13000 },
+    { id: 'salad4', name: 'モーモーミルクサラダ', category: 'salad', energyPerMeal: 12000 },
+    { id: 'salad5', name: 'ほっこりポテトサラダ', category: 'salad', energyPerMeal: 13500 },
+    { id: 'salad6', name: 'とくせんエッグサラダ', category: 'salad', energyPerMeal: 14500 },
+    { id: 'salad7', name: 'ワカクサ大豆サラダ', category: 'salad', energyPerMeal: 12500 },
+    { id: 'salad8', name: 'マメミートサラダ', category: 'salad', energyPerMeal: 14000 },
+    { id: 'salad9', name: 'あったかジンジャーサラダ', category: 'salad', energyPerMeal: 13000 },
+    { id: 'salad10', name: 'あんみんトマトサラダ', category: 'salad', energyPerMeal: 12000 },
+
     // Dessert & Drink
-    { id: 40, name: 'モーモーミルク', energyPerMeal: 420, ingredients: [] },
-    { id: 41, name: 'ピュアなオイル', energyPerMeal: 420, ingredients: [] },
-    { id: 42, name: 'ほっこりポテト', energyPerMeal: 420, ingredients: [] },
-    { id: 43, name: 'つやつやアボカド', energyPerMeal: 840, ingredients: [] },
-    { id: 44, name: 'マメミート', energyPerMeal: 420, ingredients: [] },
-    { id: 45, name: 'ふといながねぎ', energyPerMeal: 420, ingredients: [] },
-    { id: 46, name: 'とくせんエッグ', energyPerMeal: 420, ingredients: [] },
-    { id: 47, name: 'あまいミツ', energyPerMeal: 420, ingredients: [] },
-    { id: 48, name: 'げきからハーブ', energyPerMeal: 420, ingredients: [] },
-    { id: 49, name: 'あったかジンジャー', energyPerMeal: 420, ingredients: [] },
-    { id: 50, name: 'あんみんトマト', energyPerMeal: 420, ingredients: [] },
-    { id: 51, name: 'あじわいキノコ', energyPerMeal: 420, ingredients: [] },
-    { id: 52, name: 'めざましコーヒー', energyPerMeal: 840, ingredients: [] },
-    { id: 53, name: 'ワカクサコーン', energyPerMeal: 840, ingredients: [] },
-    { id: 54, name: 'ワカクサ大豆', energyPerMeal: 840, ingredients: [] },
-    { id: 55, name: 'リラックスカカオ', energyPerMeal: 840, ingredients: [] },
-    { id: 56, name: 'ずっしりカボチャ', energyPerMeal: 1260, ingredients: [] },
+    { id: 'dessert1', name: 'まけんきコーヒー', category: 'dessert', energyPerMeal: 25000 },
+    { id: 'dessert2', name: 'ドオーのエクレア', category: 'dessert', energyPerMeal: 23000 },
+    { id: 'dessert3', name: 'めざましコーヒー', category: 'dessert', energyPerMeal: 18000 },
+    { id: 'dessert4', name: 'とくせんリンゴパイ', category: 'dessert', energyPerMeal: 16000 },
+    { id: 'dessert5', name: 'おいしいシッポプリン', category: 'dessert', energyPerMeal: 19000 },
+    { id: 'dessert6', name: 'げきからハーブティー', category: 'dessert', energyPerMeal: 14000 },
+    { id: 'dessert7', name: 'あまいミツスイーツ', category: 'dessert', energyPerMeal: 13000 },
+    { id: 'dessert8', name: 'リラックスカカオドリンク', category: 'dessert', energyPerMeal: 15000 },
 ];
 
 export interface TeamState {
@@ -83,7 +72,7 @@ export interface TeamState {
     /** Whether optimization dialog is open */
     optimizationDialogOpen: boolean;
     /** Selected recipe for cooking energy calculation */
-    selectedRecipeId: number;
+    selectedRecipeId: string;
 }
 
 export function createEmptyTeam(id: number, name: string): Team {
@@ -102,6 +91,6 @@ export function createInitialTeamState(): TeamState {
         teams: [createEmptyTeam(0, 'Team 1')],
         selectedTeamId: 0,
         optimizationDialogOpen: false,
-        selectedRecipeId: 0,
+        selectedRecipeId: 'curry1',
     };
 }

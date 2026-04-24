@@ -180,9 +180,9 @@ const TeamView = React.memo(({ state, dispatch }: {
                     </Typography>
                     <Select
                         value={state.team.selectedRecipeId}
-                        onChange={(e) => dispatch({ 
-                            type: 'selectRecipe', 
-                            payload: { recipeId: e.target.value as number } 
+                        onChange={(e) => dispatch({
+                            type: 'selectRecipe',
+                            payload: { recipeId: e.target.value as string }
                         })}
                         fullWidth
                     >
@@ -219,7 +219,7 @@ const TeamView = React.memo(({ state, dispatch }: {
                     <StyledEnergyCard>
                         <CardContent>
                             <Typography variant="h6" gutterBottom>
-                                {t('daily energy')}
+                                {t('weekly energy')}
                             </Typography>
                             <Box display="flex" justifyContent="space-around" flexWrap="wrap">
                                 <Box textAlign="center" m={1}>

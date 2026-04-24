@@ -45,7 +45,7 @@ export type IvAction = {
     type: "openOptimizationDialog";
 }|{
     type: "selectRecipe";
-    payload: {recipeId: number};
+    payload: {recipeId: string};
 };
 
 const initialBox = new PokemonBox();
