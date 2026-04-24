@@ -748,6 +748,7 @@
         "optimize for field": "フィールドで最適化",
         "select pokemon from box": "ボックスからポケモンを選択",
         "select field": "フィールドを選択",
+        "select recipe": "料理を選択",
         "optimize description": "ボックス内のポケモンからエナジーが高い順に5体を自動選択します。",
         "optimize": "最適化",
 

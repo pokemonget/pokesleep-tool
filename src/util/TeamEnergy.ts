@@ -1,6 +1,7 @@
 import PokemonIv from './PokemonIv';
 import PokemonStrength, { StrengthParameter, StrengthResult } from './PokemonStrength';
 import { IngredientName } from '../data/pokemons';
+import { Recipe } from '../ui/IvCalc/Team/TeamState';
 
 export interface TeamEnergyResult {
     /** Total berry energy for the team */
@@ -33,7 +34,8 @@ export interface IngredientRequirement {
  */
 export function calculateTeamEnergy(
     members: PokemonIv[],
-    parameter: StrengthParameter
+    parameter: StrengthParameter,
+    recipe: Recipe
 ): TeamEnergyResult {
     const memberResults: StrengthResult[] = [];
     let totalBerryEnergy = 0;
@@ -55,8 +57,8 @@ export function calculateTeamEnergy(
         }
     }
 
-    // Calculate cooking energy (simplified: 3 meals * average recipe bonus)
-    const cookingEnergy = calculateCookingEnergy(ingredients, parameter);
+    // Calculate cooking energy based on selected recipe
+    const cookingEnergy = calculateCookingEnergy(recipe, parameter);
 
     const totalEnergy = totalBerryEnergy + totalSkillEnergy + cookingEnergy;
 
@@ -71,18 +73,16 @@ export function calculateTeamEnergy(
 }
 
 /**
- * Calculate cooking energy from ingredients
+ * Calculate cooking energy from recipe
  * This is a simplified calculation - actual game logic is more complex
  */
 function calculateCookingEnergy(
-    ingredients: Map<IngredientName, number>,
+    recipe: Recipe,
     parameter: StrengthParameter
 ): number {
-    // Simplified: assume each meal provides energy based on recipe bonus
-    // In actual game, this depends on specific recipes
+    // Use recipe's energy per meal, apply recipe bonus
     const recipeBonus = parameter.recipeBonus / 100;
-    const baseEnergyPerMeal = 1000; // Placeholder value
-    return baseEnergyPerMeal * 3 * (1 + recipeBonus);
+    return recipe.energyPerMeal * 3 * (1 + recipeBonus);
 }
 
 /**

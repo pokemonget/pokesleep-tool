@@ -43,6 +43,9 @@ export type IvAction = {
     type: "openTeamDialog";
 }|{
     type: "openOptimizationDialog";
+}|{
+    type: "selectRecipe";
+    payload: {recipeId: number};
 };
 
 const initialBox = new PokemonBox();
@@ -317,20 +320,17 @@ export function ivStateReducer(state: IvState, action: IvAction): IvState {
     if (type === "closeAlert") {
         return {...state, alertMessage: ""};
     }
-    if (type === "teamDialogClose") {
-        return {...state, team: {...state.team, teamDialogOpen: false}};
-    }
     if (type === "optimizationDialogClose") {
         return {...state, team: {...state.team, optimizationDialogOpen: false}};
-    }
-    if (type === "openTeamDialog") {
-        return {...state, team: {...state.team, teamDialogOpen: true}};
     }
     if (type === "openOptimizationDialog") {
         return {...state, team: {...state.team, optimizationDialogOpen: true}};
     }
     if (type === "selectTeam") {
         return {...state, team: {...state.team, selectedTeamId: action.payload.teamId}};
+    }
+    if (type === "selectRecipe") {
+        return {...state, team: {...state.team, selectedRecipeId: action.payload.recipeId}};
     }
     if (type === "updateTeamMember") {
         const { slotIndex, member } = action.payload;

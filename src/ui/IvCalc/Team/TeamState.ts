@@ -10,32 +10,49 @@ export interface TeamMember {
 }
 
 export interface Team {
-    /** Team ID */
+    /** Unique team ID */
     id: number;
     /** Team name */
     name: string;
-    /** 5 team members */
+    /** Team members (5 slots) */
     members: TeamMember[];
 }
 
+export interface Recipe {
+    /** Recipe ID */
+    id: number;
+    /** Recipe name */
+    name: string;
+    /** Energy per meal */
+    energyPerMeal: number;
+    /** Required ingredients (simplified) */
+    ingredients: string[];
+}
+
+export const RECIPES: Recipe[] = [
+    { id: 0, name: 'Curry', energyPerMeal: 500, ingredients: [] },
+    { id: 1, name: 'Salad', energyPerMeal: 400, ingredients: [] },
+    { id: 2, name: 'Pizza', energyPerMeal: 600, ingredients: [] },
+    { id: 3, name: 'Gratin', energyPerMeal: 700, ingredients: [] },
+    { id: 4, name: 'Fruit Salad', energyPerMeal: 300, ingredients: [] },
+];
+
 export interface TeamState {
-    /** All saved teams */
+    /** All teams */
     teams: Team[];
     /** Currently selected team ID */
     selectedTeamId: number;
-    /** Team dialog open state */
-    teamDialogOpen: boolean;
-    /** Team optimization dialog open state */
+    /** Whether optimization dialog is open */
     optimizationDialogOpen: boolean;
+    /** Selected recipe for cooking energy calculation */
+    selectedRecipeId: number;
 }
 
-export const MAX_TEAM_SIZE = 5;
-
-export function createEmptyTeam(id: number): Team {
+export function createEmptyTeam(id: number, name: string): Team {
     return {
         id,
-        name: `Team ${id + 1}`,
-        members: Array(MAX_TEAM_SIZE).fill(null).map(() => ({
+        name,
+        members: Array(5).fill(null).map(() => ({
             iv: new PokemonIv({ pokemonName: "Venusaur" }),
             filled: false,
         })),
@@ -44,9 +61,9 @@ export function createEmptyTeam(id: number): Team {
 
 export function createInitialTeamState(): TeamState {
     return {
-        teams: [createEmptyTeam(0)],
+        teams: [createEmptyTeam(0, 'Team 1')],
         selectedTeamId: 0,
-        teamDialogOpen: false,
         optimizationDialogOpen: false,
+        selectedRecipeId: 0,
     };
 }

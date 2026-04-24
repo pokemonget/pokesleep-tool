@@ -1,11 +1,12 @@
 import React from 'react';
 import { styled } from '@mui/system';
-import { Button, Card, CardContent, Typography, Box } from '@mui/material';
+import { Button, Card, CardContent, Typography, Box, Select, MenuItem } from '@mui/material';
 import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
 import PokemonIcon from '../PokemonIcon';
 import TeamSlotDialog from './TeamSlotDialog';
 import FieldOptimizationDialog from './FieldOptimizationDialog';
+import { RECIPES, Recipe } from './TeamState';
 import { useTranslation } from 'react-i18next';
 
 const StyledSlot = styled(Box)({
@@ -91,8 +92,9 @@ const TeamView = React.memo(({ state, dispatch }: {
                 ingredients: new Map(),
             };
         }
-        return calculateTeamEnergy(members, state.parameter);
-    }, [selectedTeam, state.parameter]);
+        const selectedRecipe = RECIPES.find(r => r.id === state.team.selectedRecipeId) || RECIPES[0];
+        return calculateTeamEnergy(members, state.parameter, selectedRecipe);
+    }, [selectedTeam, state.parameter, state.team.selectedRecipeId]);
 
     if (!selectedTeam) {
         return <Typography>No team selected</Typography>;
@@ -104,6 +106,26 @@ const TeamView = React.memo(({ state, dispatch }: {
                 <Typography variant="h6" gutterBottom>
                     {selectedTeam.name}
                 </Typography>
+
+                <Box mb={2}>
+                    <Typography variant="body2" gutterBottom>
+                        {t('select recipe')}:
+                    </Typography>
+                    <Select
+                        value={state.team.selectedRecipeId}
+                        onChange={(e) => dispatch({ 
+                            type: 'selectRecipe', 
+                            payload: { recipeId: e.target.value as number } 
+                        })}
+                        fullWidth
+                    >
+                        {RECIPES.map((recipe) => (
+                            <MenuItem key={recipe.id} value={recipe.id}>
+                                {recipe.name} ({recipe.energyPerMeal} energy/meal)
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </Box>
 
                 <Box display="flex" flexWrap="wrap" gap={1}>
                     {selectedTeam.members.map((member, index) => (
