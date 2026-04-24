@@ -46,6 +46,7 @@ const TeamView = React.memo(({ state, dispatch }: {
     const { t } = useTranslation();
     const selectedTeam = state.team.teams.find(t => t.id === state.team.selectedTeamId);
     const [slotDialogOpen, setSlotDialogOpen] = React.useState(false);
+    const [selectedSlotIndex, setSelectedSlotIndex] = React.useState<number | null>(null);
     const [eventDetailOpen, setEventDetailOpen] = React.useState(false);
     const [initializeConfirmOpen, setInitializeConfirmOpen] = React.useState(false);
     const [snackBarVisible, setSnackBarVisible] = React.useState(false);
@@ -124,25 +125,21 @@ const TeamView = React.memo(({ state, dispatch }: {
             });
         } else {
             // Open dialog for empty slot
+            setSelectedSlotIndex(slotIndex);
             setSlotDialogOpen(true);
         }
     }, [selectedTeam, dispatch]);
 
     const onPokemonSelect = React.useCallback((boxItemId: number) => {
+        if (selectedSlotIndex === null) return;
+        
         const boxItem = state.box.getById(boxItemId);
-        if (!boxItem || !selectedTeam) return;
-
-        // Find the first empty slot
-        const emptySlotIndex = selectedTeam.members.findIndex(m => !m.filled);
-        if (emptySlotIndex === -1) {
-            // No empty slots, do nothing
-            return;
-        }
+        if (!boxItem) return;
 
         dispatch({
             type: 'updateTeamMember',
             payload: {
-                slotIndex: emptySlotIndex,
+                slotIndex: selectedSlotIndex,
                 member: {
                     iv: boxItem.iv.clone(),
                     nickname: boxItem.nickname,
@@ -150,10 +147,11 @@ const TeamView = React.memo(({ state, dispatch }: {
                 },
             },
         });
-    }, [state.box, selectedTeam, dispatch]);
+    }, [selectedSlotIndex, state.box, dispatch]);
 
     const onSlotDialogClose = React.useCallback(() => {
         setSlotDialogOpen(false);
+        setSelectedSlotIndex(null);
     }, []);
 
     // Calculate team energy
@@ -272,8 +270,8 @@ const TeamView = React.memo(({ state, dispatch }: {
                                         </Typography>
                                     </>
                                 ) : (
-                                    <Typography variant="body2" color="textSecondary">
-                                        {t('empty slot')}
+                                    <Typography variant="caption" color="textSecondary" style={{ fontSize: '0.75rem' }}>
+                                        空き
                                     </Typography>
                                 )}
                             </StyledSlot>
@@ -292,11 +290,11 @@ const TeamView = React.memo(({ state, dispatch }: {
                                     <Table size="small">
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell style={{ fontSize: '0.8rem' }}>{t('pokemon')}</TableCell>
-                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('berry energy')}</TableCell>
-                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('skill energy')}</TableCell>
-                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('cooking energy')}</TableCell>
-                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('total')}</TableCell>
+                                                <TableCell style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{t('pokemon')}</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>きのみ</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>スキル</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>料理</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{t('total')}</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
@@ -308,7 +306,7 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                 const individualTotal = weeklyBerry + weeklySkill;
                                                 return (
                                                     <TableRow key={index}>
-                                                        <TableCell style={{ padding: '4px 8px' }}>
+                                                        <TableCell style={{ padding: '4px 8px', whiteSpace: 'nowrap' }}>
                                                             <Box display="flex" alignItems="center" gap={0.5}>
                                                                 <PokemonIcon idForm={member.iv.idForm} size={24} />
                                                                 <Typography variant="caption">
