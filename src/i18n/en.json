@@ -757,6 +757,9 @@
         "cooking energy": "Cooking Energy",
         "optimize for field": "Optimize for Field",
         "select pokemon from box": "Select Pokemon from Box",
+        "select field": "Select Field",
+        "optimize description": "Automatically select top 5 Pokemon by energy from your box.",
+        "optimize": "Optimize",
 
         "select subskill at level xxx": "Select sub skill at <level/>",
 

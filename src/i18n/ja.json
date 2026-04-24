@@ -747,6 +747,9 @@
         "cooking energy": "料理エナジー",
         "optimize for field": "フィールドで最適化",
         "select pokemon from box": "ボックスからポケモンを選択",
+        "select field": "フィールドを選択",
+        "optimize description": "ボックス内のポケモンからエナジーが高い順に5体を自動選択します。",
+        "optimize": "最適化",
 
         "select subskill at level xxx": "<level/> のサブスキルを選択してください",
 

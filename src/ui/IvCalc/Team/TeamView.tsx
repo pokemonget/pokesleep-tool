@@ -5,6 +5,7 @@ import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
 import PokemonIcon from '../PokemonIcon';
 import TeamSlotDialog from './TeamSlotDialog';
+import FieldOptimizationDialog from './FieldOptimizationDialog';
 import { useTranslation } from 'react-i18next';
 
 const StyledSlot = styled(Box)({
@@ -183,6 +184,12 @@ const TeamView = React.memo(({ state, dispatch }: {
                 onClose={onSlotDialogClose}
                 onSelect={onPokemonSelect}
                 state={state}
+            />
+            <FieldOptimizationDialog
+                open={state.team.optimizationDialogOpen}
+                onClose={() => dispatch({ type: 'optimizationDialogClose' })}
+                state={state}
+                dispatch={dispatch}
             />
         </>
     );
