@@ -215,27 +215,25 @@ const TeamView = React.memo(({ state, dispatch }: {
                         >
                             {RECIPES.filter(r => r.category === RECIPES.find(r => r.id === state.team.selectedRecipeId)?.category).map((recipe) => (
                                 <MenuItem key={recipe.id} value={recipe.id}>
-                                    <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
-                                        <Box>
-                                            <Typography variant="body2">{recipe.name}</Typography>
-                                            <Typography variant="caption" color="textSecondary">
-                                                {recipe.energyPerMeal.toLocaleString()} energy/meal
-                                            </Typography>
-                                        </Box>
+                                    <Box width="100%">
+                                        <Typography variant="body2">{recipe.name}</Typography>
                                         {recipe.ingredients && (
-                                            <Box display="flex" gap={0.5} ml={2}>
+                                            <Box display="flex" gap={0.3} flexWrap="wrap" mt={0.5}>
                                                 {recipe.ingredients.map((ing, idx) => (
                                                     <Box key={idx} display="flex" alignItems="center" gap={0.2}>
-                                                        <Box style={{ transform: 'scale(0.7)', transformOrigin: 'center' }}>
+                                                        <Box style={{ transform: 'scale(0.6)', transformOrigin: 'center' }}>
                                                             <IngredientIcon name={mapIngredientName(ing.name)} />
                                                         </Box>
-                                                        <Typography variant="caption" style={{ fontSize: '0.7rem' }}>
+                                                        <Typography variant="caption" style={{ fontSize: '0.65rem' }}>
                                                             {ing.amount}
                                                         </Typography>
                                                     </Box>
                                                 ))}
                                             </Box>
                                         )}
+                                        <Typography variant="caption" color="textSecondary" style={{ fontSize: '0.7rem' }}>
+                                            {recipe.energyPerMeal.toLocaleString()} energy/meal
+                                        </Typography>
                                     </Box>
                                 </MenuItem>
                             ))}
