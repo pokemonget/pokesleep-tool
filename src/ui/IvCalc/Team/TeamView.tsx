@@ -1,12 +1,19 @@
 import React from 'react';
 import { styled } from '@mui/system';
-import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch } from '@mui/material';
+import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, ToggleButton, ToggleButtonGroup, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
 import PokemonIcon from '../PokemonIcon';
 import TeamSlotDialog from './TeamSlotDialog';
 import { RECIPES } from './TeamState';
+import PeriodSelect from '../Strength/PeriodSelect';
+import FixedLevelSelect from '../Strength/FixedLevelSelect';
+import AreaControlGroup from '../Strength/AreaControlGroup';
+import EventConfigDialog from '../Strength/EventConfigDialog';
+import { LevelInput } from '../IvForm/LevelControl';
+import { whistlePeriod, createStrengthParameter } from '../../../util/PokemonStrength';
+import { getActiveHelpBonus } from '../../../data/events';
 import { useTranslation } from 'react-i18next';
 
 const StyledSlot = styled(Box)({
@@ -39,6 +46,70 @@ const TeamView = React.memo(({ state, dispatch }: {
     const selectedTeam = state.team.teams.find(t => t.id === state.team.selectedTeamId);
     const [slotDialogOpen, setSlotDialogOpen] = React.useState(false);
     const [selectedSlotIndex, setSelectedSlotIndex] = React.useState<number | null>(null);
+    const [eventDetailOpen, setEventDetailOpen] = React.useState(false);
+    const [initializeConfirmOpen, setInitializeConfirmOpen] = React.useState(false);
+    const [snackBarVisible, setSnackBarVisible] = React.useState(false);
+
+    const scheduledEvents = getActiveHelpBonus(new Date())
+        .map(x => x.name)
+        .reverse();
+    let prevEventName = "";
+    const eventToggles = ['none', ...scheduledEvents, 'advanced'].map(x => {
+        let curEventName = t(`events.${x}`);
+        if (prevEventName.replace(/\(.*/, '') === curEventName.replace(/\(.*/, '')) {
+            curEventName = curEventName
+                .replace(/.*\(/, '')
+                .replace(')', '');
+        }
+        prevEventName = curEventName;
+        return <ToggleButton key={x} value={x} style={{ textTransform: 'none' }}>{curEventName}</ToggleButton>
+    });
+    const eventName = ['none', ...scheduledEvents]
+        .includes(state.parameter.event) ? state.parameter.event : 'advanced';
+
+    const isNotWhistle = (state.parameter.period !== whistlePeriod);
+
+    const onEventChange = React.useCallback((_: React.MouseEvent, val: string|null) => {
+        if (val === null) {
+            return;
+        }
+        if (val === "advanced") {
+            val = "custom";
+        }
+        dispatch({type: "changeParameter", payload: {parameter: {...state.parameter, event: val}}});
+    }, [dispatch, state.parameter]);
+
+    const onEventDetailClick = React.useCallback(() => {
+        setEventDetailOpen(true);
+    }, []);
+
+    const onEventDetailClose = React.useCallback(() => {
+        setEventDetailOpen(false);
+    }, []);
+
+    const onEditEnergyClick = React.useCallback(() => {
+        dispatch({type: 'openEnergyDialog'});
+    }, [dispatch]);
+
+    const onInitializeClick = React.useCallback(() => {
+        setInitializeConfirmOpen(true);
+    }, []);
+
+    const onInitializeConfirmClose = React.useCallback(() => {
+        setInitializeConfirmOpen(false);
+    }, []);
+
+    const onInitialize = React.useCallback(() => {
+        dispatch({type: "changeParameter", payload: {
+            parameter: createStrengthParameter({}),
+        }});
+        setSnackBarVisible(true);
+        onInitializeConfirmClose();
+    }, [dispatch, onInitializeConfirmClose]);
+
+    const onSnackbarClose = React.useCallback(() => {
+        setSnackBarVisible(false);
+    }, []);
     
     const onSlotClick = React.useCallback((slotIndex: number) => {
         setSelectedSlotIndex(slotIndex);
@@ -201,6 +272,30 @@ const TeamView = React.memo(({ state, dispatch }: {
                             <Box display="flex" flexDirection="column" gap={2}>
                                 <Box>
                                     <Typography variant="body2" gutterBottom>
+                                        {t('period')}:
+                                    </Typography>
+                                    <PeriodSelect dispatch={dispatch} value={state.parameter}/>
+                                </Box>
+                                <AreaControlGroup value={state.parameter} onChange={(value) => dispatch({type: "changeParameter", payload: {parameter: value}})}/>
+                                <Box>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('event')}:
+                                    </Typography>
+                                    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-end'}}>
+                                        <ToggleButtonGroup size="small" exclusive
+                                            value={eventName} onChange={onEventChange}>
+                                            {eventToggles}
+                                        </ToggleButtonGroup>
+                                    </div>
+                                </Box>
+                                <Box>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('level')}:
+                                    </Typography>
+                                    <FixedLevelSelect dispatch={dispatch} value={state.parameter}/>
+                                </Box>
+                                <Box>
+                                    <Typography variant="body2" gutterBottom>
                                         {t('calc with evolved')}:
                                     </Typography>
                                     <Switch
@@ -243,6 +338,46 @@ const TeamView = React.memo(({ state, dispatch }: {
                                         <MenuItem value="4">×5</MenuItem>
                                     </Select>
                                 </Box>
+                                <Box sx={{display: isNotWhistle ? 'block' : 'none'}}>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('tap frequency')} ({t('awake')}):
+                                    </Typography>
+                                    <Select
+                                        variant="standard"
+                                        value={state.parameter.tapFrequency}
+                                        onChange={(e) => dispatch({
+                                            type: 'changeParameter',
+                                            payload: { parameter: { ...state.parameter, tapFrequency: e.target.value as "always"|"none" } }
+                                        })}
+                                        fullWidth
+                                    >
+                                        <MenuItem value="always">{t('every minute')}</MenuItem>
+                                        <MenuItem value="none">{t('none')}</MenuItem>
+                                    </Select>
+                                </Box>
+                                <Box sx={{display: (isNotWhistle && state.parameter.tapFrequency !== "none") ? 'block' : 'none'}}>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('tap frequency')} ({t('asleep')}):
+                                    </Typography>
+                                    <Select
+                                        variant="standard"
+                                        value={state.parameter.tapFrequencyAsleep}
+                                        onChange={(e) => dispatch({
+                                            type: 'changeParameter',
+                                            payload: { parameter: { ...state.parameter, tapFrequencyAsleep: e.target.value as "always"|"none" } }
+                                        })}
+                                        fullWidth
+                                    >
+                                        <MenuItem value="always">{t('every minute')}</MenuItem>
+                                        <MenuItem value="none">{t('none')}</MenuItem>
+                                    </Select>
+                                </Box>
+                                <Box sx={{display: isNotWhistle ? 'block' : 'none'}}>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('energy')}:
+                                    </Typography>
+                                    <Button onClick={onEditEnergyClick}>{t('edit')}</Button>
+                                </Box>
                                 <Box>
                                     <Typography variant="body2" gutterBottom>
                                         {t('recipe bonus')}:
@@ -256,16 +391,27 @@ const TeamView = React.memo(({ state, dispatch }: {
                                         })}
                                         fullWidth
                                     >
-                                        <MenuItem value="0">0%</MenuItem>
-                                        <MenuItem value="19">19%</MenuItem>
-                                        <MenuItem value="20">20%</MenuItem>
-                                        <MenuItem value="21">21%</MenuItem>
-                                        <MenuItem value="25">25%</MenuItem>
-                                        <MenuItem value="35">35%</MenuItem>
-                                        <MenuItem value="48">48%</MenuItem>
-                                        <MenuItem value="61">61%</MenuItem>
-                                        <MenuItem value="78">78%</MenuItem>
+                                        <MenuItem value="0">0% <small style={{paddingLeft: '0.3rem'}}>({t('mixed recipe')})</small></MenuItem>
+                                        <MenuItem value="19">19% <small style={{paddingLeft: '0.3rem'}}>(7{t('range separator')}16 {t('ingredients unit')})</small></MenuItem>
+                                        <MenuItem value="20">20% <small style={{paddingLeft: '0.3rem'}}>(20{t('range separator')}22 {t('ingredients unit')})</small></MenuItem>
+                                        <MenuItem value="21">21% <small style={{paddingLeft: '0.3rem'}}>(23{t('range separator')}26 {t('ingredients unit')})</small></MenuItem>
+                                        <MenuItem value="25">25% <small style={{paddingLeft: '0.3rem'}}>(17{t('range separator')}35 {t('ingredients unit')})</small></MenuItem>
+                                        <MenuItem value="35">35% <small style={{paddingLeft: '0.3rem'}}>(35{t('range separator')}56 {t('ingredients unit')})</small></MenuItem>
+                                        <MenuItem value="48">48% <small style={{paddingLeft: '0.3rem'}}>(49{t('range separator')}77 {t('ingredients unit')})</small></MenuItem>
+                                        <MenuItem value="61">61% <small style={{paddingLeft: '0.3rem'}}>(78{t('range separator')}102 {t('ingredients unit')})</small></MenuItem>
+                                        <MenuItem value="78">78% <small style={{paddingLeft: '0.3rem'}}>(103{t('range separator')}115 {t('ingredients unit')})</small></MenuItem>
                                     </Select>
+                                </Box>
+                                <Box>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('average recipe level')}:
+                                    </Typography>
+                                    <LevelInput value={state.parameter.recipeLevel}
+                                        onChange={(recipeLevel) => dispatch({type: "changeParameter", payload: {parameter: {...state.parameter, recipeLevel}}})}
+                                        showSlider sx={{width: '2rem'}}/>
+                                </Box>
+                                <Box>
+                                    <Button onClick={onInitializeClick} variant="outlined">{t('initialize all parameters')}</Button>
                                 </Box>
                             </Box>
                         </AccordionDetails>
@@ -278,6 +424,21 @@ const TeamView = React.memo(({ state, dispatch }: {
                 onSelect={onPokemonSelect}
                 state={state}
             />
+            <EventConfigDialog open={eventDetailOpen} onClose={onEventDetailClose}
+                value={state.parameter} onChange={(value) => dispatch({type: "changeParameter", payload: {parameter: value}})}/>
+            <Dialog open={initializeConfirmOpen} onClose={onInitializeConfirmClose}>
+                <DialogTitle>{t('initialize all parameters')}</DialogTitle>
+                <DialogContent>
+                    <p style={{ fontSize: "0.9rem", margin: 0 }}>{t("initialize all parameters message")}</p>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onInitialize} color="error">{t("reset")}</Button>
+                    <Button onClick={onInitializeConfirmClose}>{t("cancel")}</Button>
+                </DialogActions>
+            </Dialog>
+            <Snackbar open={snackBarVisible}
+                autoHideDuration={2000} onClose={onSnackbarClose}
+                message={t("initialized all parameters")}/>
         </>
     );
 });
