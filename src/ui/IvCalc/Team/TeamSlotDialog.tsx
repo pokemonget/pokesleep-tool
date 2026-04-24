@@ -27,8 +27,7 @@ const TeamSlotDialog = React.memo(({
 
     const handleSelect = React.useCallback((boxItemId: number) => {
         onSelect(boxItemId);
-        onClose();
-    }, [onSelect, onClose]);
+    }, [onSelect]);
 
     return (
         <StyledDialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

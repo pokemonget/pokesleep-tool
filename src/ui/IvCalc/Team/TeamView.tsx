@@ -50,17 +50,24 @@ const TeamView = React.memo(({ state, dispatch }: {
         const boxItem = state.box.getById(boxItemId);
         if (!boxItem) return;
         
-        dispatch({
-            type: 'updateTeamMember',
-            payload: {
-                slotIndex: selectedSlotIndex,
-                member: {
-                    iv: boxItem.iv.clone(),
-                    nickname: boxItem.nickname,
-                    filled: true,
+        try {
+            dispatch({
+                type: 'updateTeamMember',
+                payload: {
+                    slotIndex: selectedSlotIndex,
+                    member: {
+                        iv: boxItem.iv.clone(),
+                        nickname: boxItem.nickname,
+                        filled: true,
+                    },
                 },
-            },
-        });
+            });
+            // Close dialog after dispatch
+            setSlotDialogOpen(false);
+            setSelectedSlotIndex(null);
+        } catch (error) {
+            console.error('Error updating team member:', error);
+        }
     }, [selectedSlotIndex, state.box, dispatch]);
 
     const onSlotDialogClose = React.useCallback(() => {
