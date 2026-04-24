@@ -243,9 +243,9 @@ const TeamView = React.memo(({ state, dispatch }: {
                     </Box>
                 </Box>
 
-                <Box display="flex" flexWrap="wrap" gap={1}>
+                <Box display="flex" flexWrap="nowrap" gap={1}>
                     {selectedTeam.members.map((member, index) => (
-                        <Box key={index} flex="1 0 18%" minWidth="80px">
+                        <Box key={index} flex="1" minWidth="0">
                             <StyledSlot onClick={() => onSlotClick(index)}>
                                 {member.filled ? (
                                     <>
