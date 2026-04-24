@@ -41,7 +41,8 @@ export function calculateTeamEnergy(
     const ingredients = new Map<IngredientName, number>();
 
     for (const member of members) {
-        const result = PokemonStrength.calc(member, parameter);
+        const strength = new PokemonStrength(member, parameter);
+        const result = strength.calculate();
         memberResults.push(result);
         
         totalBerryEnergy += result.berryTotalStrength;
