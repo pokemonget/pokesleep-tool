@@ -751,6 +751,12 @@
         "select recipe": "料理を選択",
         "parameter settings": "パラメーター設定",
         "individual contributions": "個別の貢献度",
+        "weekly ingredient production": "1週間の食材生産量",
+        "ingredient shortage for 21 meals": "21回分の食材不足",
+        "amount": "数量",
+        "required": "必要",
+        "produced": "生産",
+        "shortage": "不足/余剰",
         "optimize description": "ボックス内のポケモンからエナジーが高い順に5体を自動選択します。",
         "optimize": "最適化",
 

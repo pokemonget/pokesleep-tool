@@ -3,7 +3,7 @@ import { styled } from '@mui/system';
 import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, ToggleButton, ToggleButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IvState, { IvAction } from '../IvState';
-import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
+import { calculateTeamEnergy, TeamEnergyResult, calculateIngredientRequirements } from '../../../util/TeamEnergy';
 import PokemonIcon from '../PokemonIcon';
 import IngredientIcon from '../IngredientIcon';
 import TeamSlotDialog from './TeamSlotDialog';
@@ -163,6 +163,13 @@ const TeamView = React.memo(({ state, dispatch }: {
         const selectedRecipe = RECIPES.find(r => r.id === state.team.selectedRecipeId) || RECIPES[0];
         return calculateTeamEnergy(members, state.parameter, selectedRecipe);
     }, [selectedTeam, state.parameter, state.team.selectedRecipeId]);
+
+    const selectedRecipe = RECIPES.find(r => r.id === state.team.selectedRecipeId) || RECIPES[0];
+
+    const ingredientRequirements = React.useMemo(() => {
+        if (!selectedRecipe) return [];
+        return calculateIngredientRequirements(selectedRecipe, teamEnergy.ingredients);
+    }, [selectedRecipe, teamEnergy.ingredients]);
 
     if (!selectedTeam) {
         return <Typography>No team selected</Typography>;
@@ -341,6 +348,93 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                     </TableRow>
                                                 );
                                             })}
+                                        </TableBody>
+                                    </Table>
+                                </Box>
+                            )}
+
+                            {/* Weekly ingredient production */}
+                            {teamEnergy.ingredients.size > 0 && (
+                                <Box mt={3}>
+                                    <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold' }}>
+                                        {t('weekly ingredient production')}
+                                    </Typography>
+                                    <Table size="small">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell style={{ fontSize: '0.8rem' }}>{t('ingredient')}</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('amount')}</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {Array.from(teamEnergy.ingredients.entries())
+                                                .sort((a, b) => b[1] - a[1])
+                                                .map(([name, count]) => (
+                                                <TableRow key={name}>
+                                                    <TableCell style={{ padding: '4px 8px' }}>
+                                                        <Box display="flex" alignItems="center" gap={0.5}>
+                                                            <Box style={{ transform: 'scale(0.6)', transformOrigin: 'center' }}>
+                                                                <IngredientIcon name={name} />
+                                                            </Box>
+                                                            <Typography variant="caption">
+                                                                {name}
+                                                            </Typography>
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
+                                                        {Math.round(count).toLocaleString()}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Box>
+                            )}
+
+                            {/* Ingredient shortage for 21 meals */}
+                            {ingredientRequirements.length > 0 && (
+                                <Box mt={3}>
+                                    <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold' }}>
+                                        {t('ingredient shortage for 21 meals')}
+                                    </Typography>
+                                    <Table size="small">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell style={{ fontSize: '0.8rem' }}>{t('ingredient')}</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('required')}</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('produced')}</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('shortage')}</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {ingredientRequirements.map((req) => (
+                                                <TableRow key={req.name}>
+                                                    <TableCell style={{ padding: '4px 8px' }}>
+                                                        <Box display="flex" alignItems="center" gap={0.5}>
+                                                            <Box style={{ transform: 'scale(0.6)', transformOrigin: 'center' }}>
+                                                                <IngredientIcon name={req.name} />
+                                                            </Box>
+                                                            <Typography variant="caption">
+                                                                {req.name}
+                                                            </Typography>
+                                                        </Box>
+                                                    </TableCell>
+                                                    <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
+                                                        {req.required.toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
+                                                        {req.produced.toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell align="right" style={{ 
+                                                        padding: '4px 8px', 
+                                                        fontSize: '0.8rem',
+                                                        fontWeight: 'bold',
+                                                        color: req.shortage > 0 ? '#f44336' : '#4caf50'
+                                                    }}>
+                                                        {req.shortage > 0 ? `-${req.shortage.toLocaleString()}` : `+${Math.abs(req.shortage).toLocaleString()}`}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
                                         </TableBody>
                                     </Table>
                                 </Box>

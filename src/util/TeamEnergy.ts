@@ -21,12 +21,12 @@ export interface TeamEnergyResult {
 export interface IngredientRequirement {
     /** Ingredient name */
     name: IngredientName;
-    /** Required amount for 3 meals */
-    amount: number;
-    /** Current inventory */
-    inventory: number;
-    /** Need to stock from previous week */
-    needToStock: number;
+    /** Required amount for 21 meals */
+    required: number;
+    /** Produced amount (weekly) */
+    produced: number;
+    /** Shortage (if positive) or surplus (if negative) */
+    shortage: number;
 }
 
 /**
@@ -95,27 +95,68 @@ function calculateCookingEnergy(
 }
 
 /**
- * Calculate ingredient requirements for optimal cooking
+ * Calculate ingredient requirements for 21 meals based on recipe
  */
 export function calculateIngredientRequirements(
-    ingredients: Map<IngredientName, number>,
-    currentInventory: Map<IngredientName, number>
+    recipe: Recipe,
+    producedIngredients: Map<IngredientName, number>
 ): IngredientRequirement[] {
     const requirements: IngredientRequirement[] = [];
-    
-    // Assume we need 2x of each ingredient for 3 meals (simplified)
-    for (const [name, produced] of ingredients) {
-        const required = produced * 2;
-        const inventory = currentInventory.get(name) || 0;
-        const needToStock = Math.max(0, required - inventory);
-        
+
+    if (!recipe.ingredients) {
+        return requirements;
+    }
+
+    // Calculate required ingredients for 21 meals
+    const requiredMap = new Map<IngredientName, number>();
+    for (const ing of recipe.ingredients) {
+        const ingredientName = mapIngredientName(ing.name);
+        const requiredForOneMeal = ing.amount;
+        const requiredFor21Meals = requiredForOneMeal * 21;
+        const current = requiredMap.get(ingredientName) || 0;
+        requiredMap.set(ingredientName, current + requiredFor21Meals);
+    }
+
+    // Compare with produced ingredients
+    for (const [name, required] of requiredMap) {
+        const produced = producedIngredients.get(name) || 0;
+        const shortage = Math.max(0, required - produced);
+
         requirements.push({
             name,
-            amount: required,
-            inventory,
-            needToStock,
+            required,
+            produced,
+            shortage,
         });
     }
-    
+
     return requirements;
+}
+
+/**
+ * Map Japanese ingredient names to IngredientName
+ */
+function mapIngredientName(japaneseName: string): IngredientName {
+    const mapping: Record<string, IngredientName> = {
+        'つやつやアボカド': 'avocado',
+        'ほっこりポテト': 'potato',
+        'モーモーミルク': 'milk',
+        'ピュアなオイル': 'oil',
+        'ふといながねぎ': 'leek',
+        'あまいミツ': 'honey',
+        'マメミート': 'sausage',
+        'とくせんエッグ': 'egg',
+        'ワカクサ大豆': 'soy',
+        'あんみんトマト': 'tomato',
+        'あじわいキノコ': 'mushroom',
+        'めざましコーヒー': 'coffee',
+        'ずっしりカボチャ': 'pumpkin',
+        'げきからハーブ': 'herb',
+        'あったかジンジャー': 'ginger',
+        'おいしいシッポ': 'tail',
+        'とくせんリンゴ': 'apple',
+        'リラックスカカオ': 'cacao',
+        'ワカクサコーン': 'corn',
+    };
+    return mapping[japaneseName] || 'unknown';
 }

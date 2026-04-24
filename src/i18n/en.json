@@ -761,6 +761,12 @@
         "select recipe": "Select Recipe",
         "parameter settings": "Parameter Settings",
         "individual contributions": "Individual Contributions",
+        "weekly ingredient production": "Weekly Ingredient Production",
+        "ingredient shortage for 21 meals": "Ingredient Shortage for 21 Meals",
+        "amount": "Amount",
+        "required": "Required",
+        "produced": "Produced",
+        "shortage": "Shortage/Surplus",
         "optimize description": "Automatically select top 5 Pokemon by energy from your box.",
         "optimize": "Optimize",
 
