@@ -1,11 +1,11 @@
 import React from 'react';
 import { styled } from '@mui/system';
-import { Button, Card, CardContent, Typography, Box, Select, MenuItem } from '@mui/material';
+import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, FormControlLabel } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
 import PokemonIcon from '../PokemonIcon';
 import TeamSlotDialog from './TeamSlotDialog';
-import FieldOptimizationDialog from './FieldOptimizationDialog';
 import { RECIPES } from './TeamState';
 import { useTranslation } from 'react-i18next';
 
@@ -192,13 +192,84 @@ const TeamView = React.memo(({ state, dispatch }: {
                     </StyledEnergyCard>
                 )}
 
-                <Box mt={2} display="flex" justifyContent="center">
-                    <Button 
-                        variant="outlined" 
-                        onClick={() => dispatch({ type: 'openOptimizationDialog' })}
-                    >
-                        {t('optimize for field')}
-                    </Button>
+                <Box mt={2}>
+                    <Accordion>
+                        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                            <Typography variant="body1">{t('parameter settings')}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Box display="flex" flexDirection="column" gap={2}>
+                                <Box>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('calc with evolved')}:
+                                    </Typography>
+                                    <Switch
+                                        checked={state.parameter.evolved}
+                                        onChange={(e) => dispatch({
+                                            type: 'changeParameter',
+                                            payload: { parameter: { ...state.parameter, evolved: e.target.checked } }
+                                        })}
+                                    />
+                                </Box>
+                                <Box>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('calc with max skill level')}:
+                                    </Typography>
+                                    <Switch
+                                        checked={state.parameter.maxSkillLevel}
+                                        onChange={(e) => dispatch({
+                                            type: 'changeParameter',
+                                            payload: { parameter: { ...state.parameter, maxSkillLevel: e.target.checked } }
+                                        })}
+                                    />
+                                </Box>
+                                <Box>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('helping bonus')}:
+                                    </Typography>
+                                    <Select
+                                        variant="standard"
+                                        value={state.parameter.helpBonusCount.toString()}
+                                        onChange={(e) => dispatch({
+                                            type: 'changeParameter',
+                                            payload: { parameter: { ...state.parameter, helpBonusCount: parseInt(e.target.value) as 0|1|2|3|4 } }
+                                        })}
+                                        fullWidth
+                                    >
+                                        <MenuItem value="0">×1</MenuItem>
+                                        <MenuItem value="1">×2</MenuItem>
+                                        <MenuItem value="2">×3</MenuItem>
+                                        <MenuItem value="3">×4</MenuItem>
+                                        <MenuItem value="4">×5</MenuItem>
+                                    </Select>
+                                </Box>
+                                <Box>
+                                    <Typography variant="body2" gutterBottom>
+                                        {t('recipe bonus')}:
+                                    </Typography>
+                                    <Select
+                                        variant="standard"
+                                        value={state.parameter.recipeBonus.toString()}
+                                        onChange={(e) => dispatch({
+                                            type: 'changeParameter',
+                                            payload: { parameter: { ...state.parameter, recipeBonus: parseInt(e.target.value) } }
+                                        })}
+                                        fullWidth
+                                    >
+                                        <MenuItem value="0">0%</MenuItem>
+                                        <MenuItem value="19">19%</MenuItem>
+                                        <MenuItem value="20">20%</MenuItem>
+                                        <MenuItem value="21">21%</MenuItem>
+                                        <MenuItem value="25">25%</MenuItem>
+                                        <MenuItem value="35">35%</MenuItem>
+                                        <MenuItem value="48">48%</MenuItem>
+                                        <MenuItem value="61">61%</MenuItem>
+                                        <MenuItem value="78">78%</MenuItem>
+                                    </Select>
+                                </Box>
+                            </Box>
+                        </AccordionDetails>
+                    </Accordion>
                 </Box>
             </div>
             <TeamSlotDialog
@@ -206,12 +277,6 @@ const TeamView = React.memo(({ state, dispatch }: {
                 onClose={onSlotDialogClose}
                 onSelect={onPokemonSelect}
                 state={state}
-            />
-            <FieldOptimizationDialog
-                open={state.team.optimizationDialogOpen}
-                onClose={() => dispatch({ type: 'optimizationDialogClose' })}
-                state={state}
-                dispatch={dispatch}
             />
         </>
     );

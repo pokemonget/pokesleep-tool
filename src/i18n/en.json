@@ -759,6 +759,7 @@
         "select pokemon from box": "Select Pokemon from Box",
         "select field": "Select Field",
         "select recipe": "Select Recipe",
+        "parameter settings": "Parameter Settings",
         "optimize description": "Automatically select top 5 Pokemon by energy from your box.",
         "optimize": "Optimize",
 
