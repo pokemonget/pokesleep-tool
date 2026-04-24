@@ -49,6 +49,7 @@ const TeamView = React.memo(({ state, dispatch }: {
     const [eventDetailOpen, setEventDetailOpen] = React.useState(false);
     const [initializeConfirmOpen, setInitializeConfirmOpen] = React.useState(false);
     const [snackBarVisible, setSnackBarVisible] = React.useState(false);
+    const [energyCardExpanded, setEnergyCardExpanded] = React.useState(true);
 
     const scheduledEvents = getActiveHelpBonus(new Date())
         .map(x => x.name)
@@ -283,75 +284,81 @@ const TeamView = React.memo(({ state, dispatch }: {
 
                 {teamEnergy.totalEnergy > 0 && (
                     <StyledEnergyCard>
-                        <CardContent>
-                            {teamEnergy.memberResults.length > 0 && (
-                                <Box>
-                                    <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold' }}>
-                                        {t('individual contributions')}
-                                    </Typography>
-                                    <Table size="small">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}></TableCell>
-                                                <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>きのみ</TableCell>
-                                                <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>スキル</TableCell>
-                                                <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>料理</TableCell>
-                                                <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{t('total')}</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {selectedTeam.members.map((member, index) => {
-                                                if (!member.filled) return null;
-                                                const result = teamEnergy.memberResults[index];
-                                                const weeklyBerry = result.berryTotalStrength * 7;
-                                                const weeklySkill = result.skillStrength * 7;
-                                                const individualTotal = weeklyBerry + weeklySkill;
-                                                return (
-                                                    <TableRow key={index}>
-                                                        <TableCell style={{ padding: '4px 8px', whiteSpace: 'nowrap' }}>
-                                                            <Box display="flex" alignItems="center" justifyContent="center">
-                                                                <PokemonIcon idForm={member.iv.idForm} size={24} />
-                                                            </Box>
-                                                        </TableCell>
-                                                        <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
-                                                            {Math.round(weeklyBerry).toLocaleString()}
-                                                        </TableCell>
-                                                        <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
-                                                            {Math.round(weeklySkill).toLocaleString()}
-                                                        </TableCell>
-                                                        <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
-                                                            -
-                                                        </TableCell>
-                                                        <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                                                            {Math.round(individualTotal).toLocaleString()}
-                                                        </TableCell>
-                                                    </TableRow>
-                                                );
-                                            })}
-                                            <TableRow style={{ backgroundColor: '#f5f5f5' }}>
-                                                <TableCell style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                                                    {t('total')}
-                                                </TableCell>
-                                                <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                                                    {Math.round(teamEnergy.berryEnergy).toLocaleString()}
-                                                </TableCell>
-                                                <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                                                    {Math.round(teamEnergy.skillEnergy).toLocaleString()}
-                                                </TableCell>
-                                                <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                                                    {Math.round(teamEnergy.cookingEnergy).toLocaleString()}
-                                                </TableCell>
-                                                <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
-                                                    {Math.round(teamEnergy.totalEnergy).toLocaleString()}
-                                                </TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                    </Table>
-                                </Box>
-                            )}
+                        <Accordion expanded={energyCardExpanded} onChange={() => setEnergyCardExpanded(!energyCardExpanded)}>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Typography variant="subtitle2" style={{ fontWeight: 'bold' }}>
+                                    {t('team energy')} ({Math.round(teamEnergy.totalEnergy).toLocaleString()})
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                {teamEnergy.memberResults.length > 0 && (
+                                    <Box>
+                                        <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold' }}>
+                                            {t('individual contributions')}
+                                        </Typography>
+                                        <Table size="small">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <TableCell style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}></TableCell>
+                                                    <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>きのみ</TableCell>
+                                                    <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>スキル</TableCell>
+                                                    <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>料理</TableCell>
+                                                    <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{t('total')}</TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                                {selectedTeam.members.map((member, index) => {
+                                                    if (!member.filled) return null;
+                                                    const result = teamEnergy.memberResults[index];
+                                                    const weeklyBerry = result.berryTotalStrength * 7;
+                                                    const weeklySkill = result.skillStrength * 7;
+                                                    const individualTotal = weeklyBerry + weeklySkill;
+                                                    return (
+                                                        <TableRow key={index}>
+                                                            <TableCell style={{ padding: '4px 8px', whiteSpace: 'nowrap' }}>
+                                                                <Box display="flex" alignItems="center" justifyContent="center">
+                                                                    <PokemonIcon idForm={member.iv.idForm} size={24} />
+                                                                </Box>
+                                                            </TableCell>
+                                                            <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
+                                                                {Math.round(weeklyBerry).toLocaleString()}
+                                                            </TableCell>
+                                                            <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
+                                                                {Math.round(weeklySkill).toLocaleString()}
+                                                            </TableCell>
+                                                            <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
+                                                                -
+                                                            </TableCell>
+                                                            <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                                {Math.round(individualTotal).toLocaleString()}
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                })}
+                                                <TableRow style={{ backgroundColor: '#f5f5f5' }}>
+                                                    <TableCell style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                        {t('total')}
+                                                    </TableCell>
+                                                    <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                        {Math.round(teamEnergy.berryEnergy).toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                        {Math.round(teamEnergy.skillEnergy).toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                        {Math.round(teamEnergy.cookingEnergy).toLocaleString()}
+                                                    </TableCell>
+                                                    <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                        {Math.round(teamEnergy.totalEnergy).toLocaleString()}
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableBody>
+                                        </Table>
+                                    </Box>
+                                )}
 
-                            {/* Weekly ingredient production and shortage */}
-                            <Box mt={3} display="flex" gap={2} flexWrap="wrap">
+                                {/* Weekly ingredient production and shortage */}
+                                <Box mt={3} display="flex" gap={2} flexWrap="wrap">
                                 {/* Weekly ingredient production */}
                                 {teamEnergy.ingredients.size > 0 && (
                                     <Box flex="1" minWidth="250px">
@@ -439,7 +446,8 @@ const TeamView = React.memo(({ state, dispatch }: {
                                     </Box>
                                 )}
                             </Box>
-                        </CardContent>
+                            </AccordionDetails>
+                        </Accordion>
                     </StyledEnergyCard>
                 )}
 
