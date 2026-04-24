@@ -6,7 +6,7 @@ import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy'
 import PokemonIcon from '../PokemonIcon';
 import TeamSlotDialog from './TeamSlotDialog';
 import FieldOptimizationDialog from './FieldOptimizationDialog';
-import { RECIPES, Recipe } from './TeamState';
+import { RECIPES } from './TeamState';
 import { useTranslation } from 'react-i18next';
 
 const StyledSlot = styled(Box)({
