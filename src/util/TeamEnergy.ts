@@ -89,10 +89,9 @@ function calculateCookingEnergy(
     recipe: Recipe,
     parameter: StrengthParameter
 ): number {
-    // Use recipe's energy per meal, apply recipe bonus and field bonus, multiply by 21 meals per week
-    const recipeBonus = parameter.recipeBonus / 100;
+    // Use recipe's energy per meal, apply field bonus, multiply by 21 meals per week
     const fieldBonus = parameter.fieldBonus / 100;
-    return recipe.energyPerMeal * 21 * (1 + recipeBonus + fieldBonus);
+    return recipe.energyPerMeal * 21 * (1 + fieldBonus);
 }
 
 /**
