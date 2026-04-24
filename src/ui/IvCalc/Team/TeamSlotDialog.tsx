@@ -26,6 +26,7 @@ const TeamSlotDialog = ({
     const { t } = useTranslation();
 
     const handleSelect = (boxItemId: number) => {
+        console.log('TeamSlotDialog handleSelect called with boxItemId:', boxItemId);
         onSelect(boxItemId);
         onClose();
     };
@@ -43,7 +44,11 @@ const TeamSlotDialog = ({
                         {state.box.items.map((item) => (
                             <ListItem 
                                 key={item.id} 
-                                onClick={() => handleSelect(item.id)}
+                                onClick={() => {
+                                    console.log('ListItem onClick for item:', item.id);
+                                    handleSelect(item.id);
+                                }}
+                                onTouchStart={() => console.log('ListItem onTouchStart for item:', item.id)}
                                 style={{ cursor: 'pointer' }}
                             >
                                 <ListItemAvatar>
