@@ -130,16 +130,25 @@ const TeamView = React.memo(({ state, dispatch }: {
     }, [selectedTeam, dispatch]);
 
     const onPokemonSelect = React.useCallback((boxItemId: number) => {
+        console.log('onPokemonSelect called with boxItemId:', boxItemId);
         const boxItem = state.box.getById(boxItemId);
-        if (!boxItem || !selectedTeam) return;
-
-        // Find the first empty slot
-        const emptySlotIndex = selectedTeam.members.findIndex(m => !m.filled);
-        if (emptySlotIndex === -1) {
-            // No empty slots, do nothing
+        console.log('boxItem:', boxItem);
+        if (!boxItem || !selectedTeam) {
+            console.log('Early return: boxItem or selectedTeam is missing');
             return;
         }
 
+        // Find the first empty slot
+        const emptySlotIndex = selectedTeam.members.findIndex(m => !m.filled);
+        console.log('emptySlotIndex:', emptySlotIndex);
+        console.log('members:', selectedTeam.members.map(m => ({ filled: m.filled })));
+        if (emptySlotIndex === -1) {
+            // No empty slots, do nothing
+            console.log('No empty slots found');
+            return;
+        }
+
+        console.log('Dispatching updateTeamMember for slot:', emptySlotIndex);
         dispatch({
             type: 'updateTeamMember',
             payload: {
