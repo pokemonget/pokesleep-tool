@@ -46,7 +46,6 @@ const TeamView = React.memo(({ state, dispatch }: {
     const { t } = useTranslation();
     const selectedTeam = state.team.teams.find(t => t.id === state.team.selectedTeamId);
     const [slotDialogOpen, setSlotDialogOpen] = React.useState(false);
-    const [selectedSlotIndex, setSelectedSlotIndex] = React.useState<number | null>(null);
     const [eventDetailOpen, setEventDetailOpen] = React.useState(false);
     const [initializeConfirmOpen, setInitializeConfirmOpen] = React.useState(false);
     const [snackBarVisible, setSnackBarVisible] = React.useState(false);
@@ -125,21 +124,25 @@ const TeamView = React.memo(({ state, dispatch }: {
             });
         } else {
             // Open dialog for empty slot
-            setSelectedSlotIndex(slotIndex);
             setSlotDialogOpen(true);
         }
     }, [selectedTeam, dispatch]);
 
     const onPokemonSelect = React.useCallback((boxItemId: number) => {
-        if (selectedSlotIndex === null) return;
-        
         const boxItem = state.box.getById(boxItemId);
-        if (!boxItem) return;
+        if (!boxItem || !selectedTeam) return;
+
+        // Find the first empty slot
+        const emptySlotIndex = selectedTeam.members.findIndex(m => !m.filled);
+        if (emptySlotIndex === -1) {
+            // No empty slots, do nothing
+            return;
+        }
 
         dispatch({
             type: 'updateTeamMember',
             payload: {
-                slotIndex: selectedSlotIndex,
+                slotIndex: emptySlotIndex,
                 member: {
                     iv: boxItem.iv.clone(),
                     nickname: boxItem.nickname,
@@ -147,11 +150,10 @@ const TeamView = React.memo(({ state, dispatch }: {
                 },
             },
         });
-    }, [selectedSlotIndex, state.box, dispatch]);
+    }, [state.box, selectedTeam, dispatch]);
 
     const onSlotDialogClose = React.useCallback(() => {
         setSlotDialogOpen(false);
-        setSelectedSlotIndex(null);
     }, []);
 
     // Calculate team energy
