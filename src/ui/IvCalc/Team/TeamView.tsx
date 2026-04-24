@@ -40,12 +40,8 @@ const TeamView = React.memo(({ state, dispatch }: {
         console.log('Slot clicked:', slotIndex);
     }, []);
 
-    if (!selectedTeam) {
-        return <Typography>No team selected</Typography>;
-    }
-
     // Calculate team energy
-    const members = selectedTeam.members.filter(m => m.filled).map(m => m.iv);
+    const members = selectedTeam ? selectedTeam.members.filter(m => m.filled).map(m => m.iv) : [];
     const teamEnergy: TeamEnergyResult = React.useMemo(() => {
         if (members.length === 0) {
             return {
@@ -59,6 +55,10 @@ const TeamView = React.memo(({ state, dispatch }: {
         }
         return calculateTeamEnergy(members, state.parameter);
     }, [members, state.parameter]);
+
+    if (!selectedTeam) {
+        return <Typography>No team selected</Typography>;
+    }
 
     return (
         <div style={{ padding: '0.5rem' }}>
