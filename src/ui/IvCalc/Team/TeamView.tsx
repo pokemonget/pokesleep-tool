@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/system';
-import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, ToggleButton, ToggleButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Card, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, ToggleButton, ToggleButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult, calculateIngredientRequirements } from '../../../util/TeamEnergy';
@@ -198,10 +198,6 @@ const TeamView = React.memo(({ state, dispatch }: {
     return (
         <>
             <div style={{ padding: '0.5rem' }}>
-                <Typography variant="h6" gutterBottom>
-                    {selectedTeam.name}
-                </Typography>
-
                 <Box mb={2}>
                     <Typography variant="body2" gutterBottom>
                         {t('select recipe')}:
