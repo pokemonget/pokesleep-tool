@@ -1,5 +1,4 @@
 import PokemonIv from '../../../util/PokemonIv';
-import { PokemonBoxItem } from '../../../util/PokemonBox';
 
 export interface TeamMember {
     /** Pokemon IV data */
