@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/system';
-import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, ToggleButton, ToggleButtonGroup, Divider, Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar } from '@mui/material';
+import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, ToggleButton, ToggleButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
@@ -78,10 +78,6 @@ const TeamView = React.memo(({ state, dispatch }: {
         }
         dispatch({type: "changeParameter", payload: {parameter: {...state.parameter, event: val}}});
     }, [dispatch, state.parameter]);
-
-    const onEventDetailClick = React.useCallback(() => {
-        setEventDetailOpen(true);
-    }, []);
 
     const onEventDetailClose = React.useCallback(() => {
         setEventDetailOpen(false);
