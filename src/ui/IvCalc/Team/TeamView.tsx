@@ -5,8 +5,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
 import PokemonIcon from '../PokemonIcon';
+import IngredientIcon from '../IngredientIcon';
 import TeamSlotDialog from './TeamSlotDialog';
-import { RECIPES } from './TeamState';
+import { RECIPES, mapIngredientName } from './TeamState';
 import PeriodSelect from '../Strength/PeriodSelect';
 import FixedLevelSelect from '../Strength/FixedLevelSelect';
 import AreaControlGroup from '../Strength/AreaControlGroup';
@@ -207,7 +208,28 @@ const TeamView = React.memo(({ state, dispatch }: {
                         >
                             {RECIPES.filter(r => r.category === RECIPES.find(r => r.id === state.team.selectedRecipeId)?.category).map((recipe) => (
                                 <MenuItem key={recipe.id} value={recipe.id}>
-                                    {recipe.name} ({recipe.energyPerMeal.toLocaleString()} energy/meal)
+                                    <Box display="flex" alignItems="center" justifyContent="space-between" width="100%">
+                                        <Box>
+                                            <Typography variant="body2">{recipe.name}</Typography>
+                                            <Typography variant="caption" color="textSecondary">
+                                                {recipe.energyPerMeal.toLocaleString()} energy/meal
+                                            </Typography>
+                                        </Box>
+                                        {recipe.ingredients && (
+                                            <Box display="flex" gap={0.5} ml={2}>
+                                                {recipe.ingredients.map((ing, idx) => (
+                                                    <Box key={idx} display="flex" alignItems="center" gap={0.2}>
+                                                        <Box style={{ transform: 'scale(0.7)', transformOrigin: 'center' }}>
+                                                            <IngredientIcon name={mapIngredientName(ing.name)} />
+                                                        </Box>
+                                                        <Typography variant="caption" style={{ fontSize: '0.7rem' }}>
+                                                            {ing.amount}
+                                                        </Typography>
+                                                    </Box>
+                                                ))}
+                                            </Box>
+                                        )}
+                                    </Box>
                                 </MenuItem>
                             ))}
                         </Select>
