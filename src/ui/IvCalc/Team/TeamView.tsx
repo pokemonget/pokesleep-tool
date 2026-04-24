@@ -6,11 +6,6 @@ import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy'
 import PokemonIcon from '../PokemonIcon';
 import { useTranslation } from 'react-i18next';
 
-const StyledTeamCard = styled(Card)({
-    marginBottom: '1rem',
-    backgroundColor: '#f5f5f5',
-});
-
 const StyledSlot = styled(Box)({
     border: '2px dashed #ccc',
     borderRadius: '8px',
@@ -40,6 +35,11 @@ const TeamView = React.memo(({ state, dispatch }: {
     const { t } = useTranslation();
     const selectedTeam = state.team.teams.find(t => t.id === state.team.selectedTeamId);
     
+    const onSlotClick = React.useCallback((slotIndex: number) => {
+        // TODO: Open dialog to select Pokemon from box
+        console.log('Slot clicked:', slotIndex);
+    }, []);
+
     if (!selectedTeam) {
         return <Typography>No team selected</Typography>;
     }
@@ -59,11 +59,6 @@ const TeamView = React.memo(({ state, dispatch }: {
         }
         return calculateTeamEnergy(members, state.parameter);
     }, [members, state.parameter]);
-
-    const onSlotClick = React.useCallback((slotIndex: number) => {
-        // TODO: Open dialog to select Pokemon from box
-        console.log('Slot clicked:', slotIndex);
-    }, []);
 
     return (
         <div style={{ padding: '0.5rem' }}>
