@@ -1,6 +1,5 @@
 import PokemonIv from './PokemonIv';
 import PokemonStrength, { StrengthParameter, StrengthResult } from './PokemonStrength';
-import { MainSkillName } from './MainSkill';
 import { IngredientName } from '../data/pokemons';
 import { ingredientStrength } from './PokemonRp';
 import { Recipe } from '../ui/IvCalc/Team/TeamState';
