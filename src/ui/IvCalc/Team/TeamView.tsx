@@ -20,8 +20,8 @@ import { useTranslation } from 'react-i18next';
 const StyledSlot = styled(Box)({
     border: '2px dashed #ccc',
     borderRadius: '8px',
-    padding: '1rem',
-    minHeight: '120px',
+    padding: '0.5rem',
+    minHeight: '60px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -292,7 +292,7 @@ const TeamView = React.memo(({ state, dispatch }: {
                                     <Table size="small">
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{t('pokemon')}</TableCell>
+                                                <TableCell style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}></TableCell>
                                                 <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>きのみ</TableCell>
                                                 <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>スキル</TableCell>
                                                 <TableCell align="right" style={{ fontSize: '0.8rem', whiteSpace: 'nowrap' }}>料理</TableCell>
@@ -309,11 +309,8 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                 return (
                                                     <TableRow key={index}>
                                                         <TableCell style={{ padding: '4px 8px', whiteSpace: 'nowrap' }}>
-                                                            <Box display="flex" alignItems="center" gap={0.5}>
+                                                            <Box display="flex" alignItems="center" justifyContent="center">
                                                                 <PokemonIcon idForm={member.iv.idForm} size={24} />
-                                                                <Typography variant="caption">
-                                                                    {t(`pokemons.${member.iv.pokemon.name}`)}
-                                                                </Typography>
                                                             </Box>
                                                         </TableCell>
                                                         <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
