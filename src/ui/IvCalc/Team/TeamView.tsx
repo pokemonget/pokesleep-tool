@@ -288,8 +288,7 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                 const result = teamEnergy.memberResults[index];
                                                 const weeklyBerry = result.berryTotalStrength * 7;
                                                 const weeklySkill = result.skillStrength * 7;
-                                                const cookingPerMember = teamEnergy.cookingEnergy / selectedTeam.members.filter(m => m.filled).length;
-                                                const individualTotal = weeklyBerry + weeklySkill + cookingPerMember;
+                                                const individualTotal = weeklyBerry + weeklySkill;
                                                 return (
                                                     <TableRow key={index}>
                                                         <TableCell style={{ padding: '4px 8px' }}>
@@ -307,7 +306,7 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                             {Math.round(weeklySkill).toLocaleString()}
                                                         </TableCell>
                                                         <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
-                                                            {Math.round(cookingPerMember).toLocaleString()}
+                                                            -
                                                         </TableCell>
                                                         <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
                                                             {Math.round(individualTotal).toLocaleString()}
@@ -315,6 +314,23 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                     </TableRow>
                                                 );
                                             })}
+                                            <TableRow style={{ backgroundColor: '#f5f5f5' }}>
+                                                <TableCell style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                    {t('total')}
+                                                </TableCell>
+                                                <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                    {Math.round(teamEnergy.berryEnergy).toLocaleString()}
+                                                </TableCell>
+                                                <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                    {Math.round(teamEnergy.skillEnergy).toLocaleString()}
+                                                </TableCell>
+                                                <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                    {Math.round(teamEnergy.cookingEnergy).toLocaleString()}
+                                                </TableCell>
+                                                <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
+                                                    {Math.round(teamEnergy.totalEnergy).toLocaleString()}
+                                                </TableCell>
+                                            </TableRow>
                                         </TableBody>
                                     </Table>
                                 </Box>
