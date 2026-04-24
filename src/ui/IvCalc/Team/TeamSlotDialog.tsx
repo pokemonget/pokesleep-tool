@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from '@mui/system';
 import { Dialog, DialogTitle, DialogContent, List, ListItem, ListItemText, ListItemAvatar, Avatar, Typography } from '@mui/material';
-import IvState, { IvAction } from '../IvState';
+import IvState from '../IvState';
 import PokemonIcon from '../PokemonIcon';
 import { useTranslation } from 'react-i18next';
 
