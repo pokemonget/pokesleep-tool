@@ -46,7 +46,6 @@ const TeamView = React.memo(({ state, dispatch }: {
     const { t } = useTranslation();
     const selectedTeam = state.team.teams.find(t => t.id === state.team.selectedTeamId);
     const [slotDialogOpen, setSlotDialogOpen] = React.useState(false);
-    const [selectedSlotIndex, setSelectedSlotIndex] = React.useState<number | null>(null);
     const [eventDetailOpen, setEventDetailOpen] = React.useState(false);
     const [initializeConfirmOpen, setInitializeConfirmOpen] = React.useState(false);
     const [snackBarVisible, setSnackBarVisible] = React.useState(false);
@@ -125,7 +124,6 @@ const TeamView = React.memo(({ state, dispatch }: {
             });
         } else {
             // Open dialog for empty slot
-            setSelectedSlotIndex(slotIndex);
             setSlotDialogOpen(true);
         }
     }, [selectedTeam, dispatch]);
@@ -156,7 +154,6 @@ const TeamView = React.memo(({ state, dispatch }: {
 
     const onSlotDialogClose = React.useCallback(() => {
         setSlotDialogOpen(false);
-        setSelectedSlotIndex(null);
     }, []);
 
     // Calculate team energy
