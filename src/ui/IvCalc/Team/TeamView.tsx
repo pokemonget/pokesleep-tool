@@ -267,46 +267,8 @@ const TeamView = React.memo(({ state, dispatch }: {
                 {teamEnergy.totalEnergy > 0 && (
                     <StyledEnergyCard>
                         <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                {t('weekly energy')}
-                            </Typography>
-                            <Box display="flex" justifyContent="space-around" flexWrap="wrap">
-                                <Box textAlign="center" m={1}>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {t('berry energy')}
-                                    </Typography>
-                                    <Typography variant="h6" color="primary">
-                                        {Math.round(teamEnergy.berryEnergy).toLocaleString()}
-                                    </Typography>
-                                </Box>
-                                <Box textAlign="center" m={1}>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {t('skill energy')}
-                                    </Typography>
-                                    <Typography variant="h6" color="secondary">
-                                        {Math.round(teamEnergy.skillEnergy).toLocaleString()}
-                                    </Typography>
-                                </Box>
-                                <Box textAlign="center" m={1}>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {t('cooking energy')}
-                                    </Typography>
-                                    <Typography variant="h6" style={{ color: '#ff9800' }}>
-                                        {Math.round(teamEnergy.cookingEnergy).toLocaleString()}
-                                    </Typography>
-                                </Box>
-                            </Box>
-                            <Box textAlign="center" mt={2}>
-                                <Typography variant="body2" color="textSecondary">
-                                    {t('total')}
-                                </Typography>
-                                <Typography variant="h4" style={{ fontWeight: 'bold' }}>
-                                    {Math.round(teamEnergy.totalEnergy).toLocaleString()}
-                                </Typography>
-                            </Box>
-
                             {teamEnergy.memberResults.length > 0 && (
-                                <Box mt={3}>
+                                <Box>
                                     <Typography variant="subtitle2" gutterBottom style={{ fontWeight: 'bold' }}>
                                         {t('individual contributions')}
                                     </Typography>
@@ -316,6 +278,7 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                 <TableCell style={{ fontSize: '0.8rem' }}>{t('pokemon')}</TableCell>
                                                 <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('berry energy')}</TableCell>
                                                 <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('skill energy')}</TableCell>
+                                                <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('cooking energy')}</TableCell>
                                                 <TableCell align="right" style={{ fontSize: '0.8rem' }}>{t('total')}</TableCell>
                                             </TableRow>
                                         </TableHead>
@@ -325,7 +288,8 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                 const result = teamEnergy.memberResults[index];
                                                 const weeklyBerry = result.berryTotalStrength * 7;
                                                 const weeklySkill = result.skillStrength * 7;
-                                                const individualTotal = weeklyBerry + weeklySkill;
+                                                const cookingPerMember = teamEnergy.cookingEnergy / selectedTeam.members.filter(m => m.filled).length;
+                                                const individualTotal = weeklyBerry + weeklySkill + cookingPerMember;
                                                 return (
                                                     <TableRow key={index}>
                                                         <TableCell style={{ padding: '4px 8px' }}>
@@ -341,6 +305,9 @@ const TeamView = React.memo(({ state, dispatch }: {
                                                         </TableCell>
                                                         <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
                                                             {Math.round(weeklySkill).toLocaleString()}
+                                                        </TableCell>
+                                                        <TableCell align="right" style={{ padding: '4px 8px', fontSize: '0.8rem' }}>
+                                                            {Math.round(cookingPerMember).toLocaleString()}
                                                         </TableCell>
                                                         <TableCell align="right" style={{ padding: '4px 8px', fontWeight: 'bold', fontSize: '0.8rem' }}>
                                                             {Math.round(individualTotal).toLocaleString()}
