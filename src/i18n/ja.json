@@ -396,6 +396,7 @@
         "rp": "SP",
         "strength2": "エナジー",
         "rating": "個体評価",
+        "team": "チーム編成",
 
         "go to strength tab to show the current condition values": "現在の条件でのエナジー、食材数、スキル回数を表示するには、[$t(strength2)] タブに移動してください。",
         "strength, ingredients, skill count": "エナジー、食材数、スキル回数",
@@ -739,6 +740,12 @@
         "total strength": "合計エナジー",
         "skill count": "スキル回数",
         "total": "合計",
+        "empty slot": "空きスロット",
+        "daily energy": "1日エナジー",
+        "berry energy": "きのみエナジー",
+        "skill energy": "スキルエナジー",
+        "cooking energy": "料理エナジー",
+        "optimize for field": "フィールドで最適化",
 
         "select subskill at level xxx": "<level/> のサブスキルを選択してください",
 

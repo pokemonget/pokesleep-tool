@@ -5,11 +5,13 @@ import PokemonBox, { PokemonBoxItem } from '../../util/PokemonBox';
 import { StrengthParameter, loadStrengthParameter } from '../../util/PokemonStrength';
 import { isExpertField } from '../../data/fields';
 import i18n from '../../i18n';
+import { TeamState, createInitialTeamState, TeamMember } from './Team/TeamState';
 
 export type IvAction = {
     type: "add"|"export"|"exportClose"|"import"|"importClose"|
         "deleteAll" | "deleteAllClose" | "saveItem"|"restoreItem"|
-        "editDialogClose"|"closeAlert"|"openEnergyDialog"|"closeEnergyDialog";
+        "editDialogClose"|"closeAlert"|"openEnergyDialog"|"closeEnergyDialog"|
+        "teamDialogClose"|"optimizationDialogClose";
 }|{
     type: "select"|"edit"|"dup"|"remove";
     payload: {id: number};
@@ -31,6 +33,16 @@ export type IvAction = {
 }|{
     type: "showAlert",
     payload: {message: string},
+}|{
+    type: "selectTeam";
+    payload: {teamId: number};
+}|{
+    type: "updateTeamMember";
+    payload: {slotIndex: number; member: TeamMember};
+}|{
+    type: "openTeamDialog";
+}|{
+    type: "openOptimizationDialog";
 };
 
 const initialBox = new PokemonBox();
@@ -51,6 +63,7 @@ type IvState = {
     boxImportDialogOpen: boolean;
     boxDeleteAllDialogOpen: boolean;
     alertMessage: string;
+    team: TeamState;
 };
 
 /**
@@ -107,6 +120,7 @@ export function getInitialIvState(): IvState {
         boxImportDialogOpen: false,
         boxDeleteAllDialogOpen: false,
         alertMessage: "",
+        team: createInitialTeamState(),
     };
 
     // Update initial pokemonIv
@@ -302,6 +316,37 @@ export function ivStateReducer(state: IvState, action: IvAction): IvState {
     }
     if (type === "closeAlert") {
         return {...state, alertMessage: ""};
+    }
+    if (type === "teamDialogClose") {
+        return {...state, team: {...state.team, teamDialogOpen: false}};
+    }
+    if (type === "optimizationDialogClose") {
+        return {...state, team: {...state.team, optimizationDialogOpen: false}};
+    }
+    if (type === "openTeamDialog") {
+        return {...state, team: {...state.team, teamDialogOpen: true}};
+    }
+    if (type === "openOptimizationDialog") {
+        return {...state, team: {...state.team, optimizationDialogOpen: true}};
+    }
+    if (type === "selectTeam") {
+        return {...state, team: {...state.team, selectedTeamId: action.payload.teamId}};
+    }
+    if (type === "updateTeamMember") {
+        const { slotIndex, member } = action.payload;
+        const selectedTeam = state.team.teams.find(t => t.id === state.team.selectedTeamId);
+        if (!selectedTeam) return state;
+        
+        const newMembers = [...selectedTeam.members];
+        newMembers[slotIndex] = member;
+        
+        const newTeams = state.team.teams.map(t => 
+            t.id === state.team.selectedTeamId 
+                ? {...t, members: newMembers}
+                : t
+        );
+        
+        return {...state, team: {...state.team, teams: newTeams}};
     }
 
     // following action requires item

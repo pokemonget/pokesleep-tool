@@ -16,6 +16,7 @@ import BoxItemDialog from './Box/BoxItemDialog';
 import BoxExportDialog from './Box/BoxExportDialog';
 import BoxImportDialog from './Box/BoxImportDialog';
 import BoxDeleteAllDialog from './Box/BoxDeleteAllDialog';
+import TeamView from './Team/TeamView';
 import { useTranslation } from 'react-i18next';
 
 const StyledTabs = styled(Tabs)({
@@ -84,10 +85,12 @@ const ResearchCalcApp = React.memo(() => {
                 <StyledTab label={t('rp')}/>
                 <StyledTab label={t('strength2')}/>
                 <StyledTab label={t('rating')}/>
+                <StyledTab label={t('team')}/>
             </StyledTabs>
             {state.tabIndex === 0 && <RpView state={state} width={width}/>}
             {state.tabIndex === 1 && <StrengthView state={state} dispatch={dispatch}/>}
             {state.tabIndex === 2 && <RatingView pokemonIv={state.pokemonIv} width={width}/>}
+            {state.tabIndex === 3 && <TeamView state={state} dispatch={dispatch}/>}
             <RateNotFixedPanel state={state} dispatch={dispatch}/>
 
             <LowerTabHeader state={state}
