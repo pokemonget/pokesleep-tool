@@ -26,22 +26,22 @@ export interface Recipe {
 }
 
 export const RECIPES: Recipe[] = [
-    // Curry & Stew (maximum energy values from game8/hatenablog)
-    { id: 'curry1', name: 'とくせんリンゴカレー', category: 'curry', energyPerMeal: 748 },
-    { id: 'curry2', name: 'あぶりテールカレー', category: 'curry', energyPerMeal: 7483 },
-    { id: 'curry3', name: 'ニンジャカレー', category: 'curry', energyPerMeal: 28618 },
-    { id: 'curry4', name: 'ぜったいねむりバターカレー', category: 'curry', energyPerMeal: 9010 },
-    { id: 'curry5', name: 'おやこあいカレー', category: 'curry', energyPerMeal: 4523 },
-    { id: 'curry6', name: 'キノコのほうしカレー', category: 'curry', energyPerMeal: 4162 },
-    { id: 'curry7', name: 'からくちネギもりカレー', category: 'curry', energyPerMeal: 5900 },
-    { id: 'curry8', name: 'ピヨピヨパンチ辛口カレー', category: 'curry', energyPerMeal: 5702 },
-    { id: 'curry9', name: 'れんごくコーンキーマカレー', category: 'curry', energyPerMeal: 41481 },
-    { id: 'curry10', name: 'いあいぎりすき焼きカレー', category: 'curry', energyPerMeal: 82839 },
-    { id: 'stew1', name: 'めざめるパワーシチュー', category: 'curry', energyPerMeal: 57755 },
-    { id: 'stew2', name: 'じゅうなんコーンシチュー', category: 'curry', energyPerMeal: 4670 },
-    { id: 'stew3', name: 'なりきりバケッチャシチュー', category: 'curry', energyPerMeal: 3181 },
+    // Curry & Stew (sorted by max energy descending)
+    { id: 'curry1', name: 'いあいぎりすき焼きカレー', category: 'curry', energyPerMeal: 82839 },
+    { id: 'curry2', name: 'めざめるパワーシチュー', category: 'curry', energyPerMeal: 57755 },
+    { id: 'curry3', name: 'れんごくコーンキーマカレー', category: 'curry', energyPerMeal: 41481 },
+    { id: 'curry4', name: 'ニンジャカレー', category: 'curry', energyPerMeal: 28618 },
+    { id: 'curry5', name: 'ぜったいねむりバターカレー', category: 'curry', energyPerMeal: 9010 },
+    { id: 'curry6', name: 'からくちネギもりカレー', category: 'curry', energyPerMeal: 5900 },
+    { id: 'curry7', name: 'ピヨピヨパンチ辛口カレー', category: 'curry', energyPerMeal: 5702 },
+    { id: 'curry8', name: 'じゅうなんコーンシチュー', category: 'curry', energyPerMeal: 4670 },
+    { id: 'curry9', name: 'おやこあいカレー', category: 'curry', energyPerMeal: 4523 },
+    { id: 'curry10', name: 'キノコのほうしカレー', category: 'curry', energyPerMeal: 4162 },
+    { id: 'curry11', name: 'なりきりバケッチャシチュー', category: 'curry', energyPerMeal: 3181 },
+    { id: 'curry12', name: 'あぶりテールカレー', category: 'curry', energyPerMeal: 7483 },
+    { id: 'curry13', name: 'とくせんリンゴカレー', category: 'curry', energyPerMeal: 748 },
 
-    // Salad
+    // Salad (sorted by max energy descending)
     { id: 'salad1', name: 'まけんきコーヒーサラダ', category: 'salad', energyPerMeal: 20218 },
     { id: 'salad2', name: 'りんごさんヨーグルトサラダ', category: 'salad', energyPerMeal: 19293 },
     { id: 'salad3', name: 'はなふぶきミモザサラダ', category: 'salad', energyPerMeal: 11811 },
@@ -53,7 +53,7 @@ export const RECIPES: Recipe[] = [
     { id: 'salad9', name: 'キノコのほうしサラダ', category: 'salad', energyPerMeal: 5859 },
     { id: 'salad10', name: 'オーバーヒートサラダ', category: 'salad', energyPerMeal: 5225 },
 
-    // Dessert & Drink
+    // Dessert & Drink (sorted by max energy descending)
     { id: 'dessert1', name: 'ドオーのエクレア', category: 'dessert', energyPerMeal: 20885 },
     { id: 'dessert2', name: 'スパークスパイスコーラ', category: 'dessert', energyPerMeal: 17494 },
     { id: 'dessert3', name: 'フラワーギフトマカロン', category: 'dessert', energyPerMeal: 13834 },

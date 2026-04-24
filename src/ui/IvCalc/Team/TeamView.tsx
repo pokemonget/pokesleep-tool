@@ -178,20 +178,40 @@ const TeamView = React.memo(({ state, dispatch }: {
                     <Typography variant="body2" gutterBottom>
                         {t('select recipe')}:
                     </Typography>
-                    <Select
-                        value={state.team.selectedRecipeId}
-                        onChange={(e) => dispatch({
-                            type: 'selectRecipe',
-                            payload: { recipeId: e.target.value as string }
-                        })}
-                        fullWidth
-                    >
-                        {RECIPES.map((recipe) => (
-                            <MenuItem key={recipe.id} value={recipe.id}>
-                                {recipe.name} ({recipe.energyPerMeal} energy/meal)
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <Box display="flex" gap={1} mb={1}>
+                        <Select
+                            value={RECIPES.find(r => r.id === state.team.selectedRecipeId)?.category || 'curry'}
+                            onChange={(e) => {
+                                const category = e.target.value as 'curry' | 'salad' | 'dessert';
+                                const firstRecipeInCategory = RECIPES.find(r => r.category === category);
+                                if (firstRecipeInCategory) {
+                                    dispatch({
+                                        type: 'selectRecipe',
+                                        payload: { recipeId: firstRecipeInCategory.id }
+                                    });
+                                }
+                            }}
+                            style={{ minWidth: '120px' }}
+                        >
+                            <MenuItem value="curry">カレー</MenuItem>
+                            <MenuItem value="salad">サラダ</MenuItem>
+                            <MenuItem value="dessert">デザート</MenuItem>
+                        </Select>
+                        <Select
+                            value={state.team.selectedRecipeId}
+                            onChange={(e) => dispatch({
+                                type: 'selectRecipe',
+                                payload: { recipeId: e.target.value as string }
+                            })}
+                            fullWidth
+                        >
+                            {RECIPES.filter(r => r.category === RECIPES.find(r => r.id === state.team.selectedRecipeId)?.category).map((recipe) => (
+                                <MenuItem key={recipe.id} value={recipe.id}>
+                                    {recipe.name} ({recipe.energyPerMeal.toLocaleString()} energy/meal)
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </Box>
                 </Box>
 
                 <Box display="flex" flexWrap="wrap" gap={1}>
