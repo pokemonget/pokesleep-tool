@@ -186,9 +186,6 @@ function calculateSkillIngredients(
         ? member.versatileSkill 
         : member.pokemon.skill;
     
-    // Get the Pokemon's actual ingredients (based on level)
-    const pokemonIngredients = member.getIngredients(true);
-    
     // Ingredient Magnet S (Plus) - specific ingredient
     if (mainSkill === "Ingredient Magnet S (Plus)") {
         const ingCount = result.skillValue2; // skillValue2 contains the additional ingredient count
