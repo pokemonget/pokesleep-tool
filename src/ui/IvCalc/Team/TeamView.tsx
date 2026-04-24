@@ -41,8 +41,18 @@ const TeamView = React.memo(({ state, dispatch }: {
     }, []);
 
     // Calculate team energy
-    const members = selectedTeam ? selectedTeam.members.filter(m => m.filled).map(m => m.iv) : [];
     const teamEnergy: TeamEnergyResult = React.useMemo(() => {
+        if (!selectedTeam) {
+            return {
+                berryEnergy: 0,
+                skillEnergy: 0,
+                cookingEnergy: 0,
+                totalEnergy: 0,
+                memberResults: [],
+                ingredients: new Map(),
+            };
+        }
+        const members = selectedTeam.members.filter(m => m.filled).map(m => m.iv);
         if (members.length === 0) {
             return {
                 berryEnergy: 0,
@@ -54,7 +64,7 @@ const TeamView = React.memo(({ state, dispatch }: {
             };
         }
         return calculateTeamEnergy(members, state.parameter);
-    }, [members, state.parameter]);
+    }, [selectedTeam, state.parameter]);
 
     if (!selectedTeam) {
         return <Typography>No team selected</Typography>;
@@ -87,7 +97,7 @@ const TeamView = React.memo(({ state, dispatch }: {
                 ))}
             </Box>
 
-            {members.length > 0 && (
+            {teamEnergy.totalEnergy > 0 && (
                 <StyledEnergyCard>
                     <CardContent>
                         <Typography variant="h6" gutterBottom>
