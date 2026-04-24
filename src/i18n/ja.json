@@ -750,6 +750,7 @@
         "select field": "フィールドを選択",
         "select recipe": "料理を選択",
         "parameter settings": "パラメーター設定",
+        "individual contributions": "個別の貢献度",
         "optimize description": "ボックス内のポケモンからエナジーが高い順に5体を自動選択します。",
         "optimize": "最適化",
 

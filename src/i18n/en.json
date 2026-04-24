@@ -760,6 +760,7 @@
         "select field": "Select Field",
         "select recipe": "Select Recipe",
         "parameter settings": "Parameter Settings",
+        "individual contributions": "Individual Contributions",
         "optimize description": "Automatically select top 5 Pokemon by energy from your box.",
         "optimize": "Optimize",
 

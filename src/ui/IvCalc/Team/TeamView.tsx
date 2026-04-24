@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/system';
-import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, ToggleButton, ToggleButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar } from '@mui/material';
+import { Card, CardContent, Typography, Box, Select, MenuItem, Accordion, AccordionSummary, AccordionDetails, Switch, ToggleButton, ToggleButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import IvState, { IvAction } from '../IvState';
 import { calculateTeamEnergy, TeamEnergyResult } from '../../../util/TeamEnergy';
@@ -257,6 +257,54 @@ const TeamView = React.memo(({ state, dispatch }: {
                             </Box>
                         </CardContent>
                     </StyledEnergyCard>
+                )}
+
+                {teamEnergy.memberResults.length > 0 && (
+                    <Box mt={2}>
+                        <Typography variant="h6" gutterBottom>
+                            {t('individual contributions')}
+                        </Typography>
+                        <TableContainer component={Card}>
+                            <Table size="small">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>{t('pokemon')}</TableCell>
+                                        <TableCell align="right">{t('berry energy')}</TableCell>
+                                        <TableCell align="right">{t('skill energy')}</TableCell>
+                                        <TableCell align="right">{t('total')}</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {selectedTeam.members.map((member, index) => {
+                                        if (!member.filled) return null;
+                                        const result = teamEnergy.memberResults[index];
+                                        const individualTotal = result.berryTotalStrength + result.skillStrength;
+                                        return (
+                                            <TableRow key={index}>
+                                                <TableCell>
+                                                    <Box display="flex" alignItems="center" gap={1}>
+                                                        <PokemonIcon idForm={member.iv.idForm} size={30} />
+                                                        <Typography variant="body2">
+                                                            {t(`pokemons.${member.iv.pokemon.name}`)}
+                                                        </Typography>
+                                                    </Box>
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    {Math.round(result.berryTotalStrength).toLocaleString()}
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    {Math.round(result.skillStrength).toLocaleString()}
+                                                </TableCell>
+                                                <TableCell align="right" style={{ fontWeight: 'bold' }}>
+                                                    {Math.round(individualTotal).toLocaleString()}
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Box>
                 )}
 
                 <Box mt={2}>
