@@ -722,7 +722,7 @@
         "sleepType": "slumbering",
         "exp": 600,
         "type": "ground",
-        "specialty": "Ingredients",
+        "specialty": "Skills",
         "skill": "Ingredient Draw S",
         "fp": 12,
         "frequency": 2800,
