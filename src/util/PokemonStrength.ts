@@ -663,7 +663,12 @@ class PokemonStrength {
                     skillValue2: 0, skillStrength2: 0, skillValuePerTrigger2: 0,
                 };
             case "Ingredient Draw S": {
-                const averageStrength = 407 / 3;
+                const averageStrength = (
+                    this.iv.pokemon.ancestor === 557 ? 407 / 3 : // Crustle
+                    this.iv.pokemon.ancestor === 742 ? 362 / 3 :// Ribombee
+                    this.iv.pokemon.ancestor === 27 ? 514 / 3 : // Sandshrew
+                    0
+                );
                 return {
                     skillValue: skillValue,
                     skillStrength: skillValue * averageStrength * ingFactor,
